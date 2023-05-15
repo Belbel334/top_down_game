@@ -75,6 +75,21 @@ mod top_down
         texture: &'a Texture<'a>,
     }
 
+    enum CameraMode {
+        FollowPlayer,
+        OnePlace,
+    }
+
+    struct Camera {
+        camera_mode: CameraMode,
+        x: i32,
+        y: i32,
+    }
+
+    impl Camera {
+        
+    }
+
     impl Player<'_>
     {
         pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
@@ -102,7 +117,7 @@ mod top_down
 
     impl Obstacle<'_>
     {
-        pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
+        fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
         {
             canvas.copy(&self.texture, Some(self.texture_location), Some(self.location))?;
             Ok(())

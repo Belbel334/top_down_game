@@ -9,7 +9,19 @@ use std::vec::Vec;
 pub struct Game<'a>
 {
     tile_size: u32,
+    camera: Camera,
     player: Player<'a>,
+    tile_map: TileMap<'a>,
+    
+}
+
+impl Game<'_>
+{
+    pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
+    {
+        self.player.draw(canvas)?;
+        Ok(())
+    }
 }
 
 pub enum CameraMode {
@@ -91,14 +103,13 @@ pub struct TileMap<'a>
 {
     tiles: Vec<Vec<Tile<'a>>>,
     x_tiles: u32,
-    y_tileo: u32,
+    y_tiles: u32,
 }
 
 impl TileMap<'_>
 {
     fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
     {
-        //canvas.copy(&self.texture, Some(self.texture_location), Some(self.location))?;
         for tile_vec in &self.tiles
         {
             for tile in tile_vec

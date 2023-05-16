@@ -9,14 +9,18 @@ use std::vec::Vec;
 pub struct Game<'a>
 {
     tile_size: u32,
-    camera: Camera,
-    player: Player<'a>,
-    tile_map: TileMap<'a>,
+    pub camera: Camera,
+    pub player: Player<'a>,
+    pub tile_map: TileMap<'a>,
     
 }
 
 impl Game<'_>
 {
+    pub fn new()
+    {
+    }
+
     pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
     {
         self.player.draw(canvas)?;
@@ -61,11 +65,17 @@ pub struct Player<'a>
 
 impl Player<'_>
 {
+    pub fn new<'a> (speed: u32, location: Rect, texture_location: Rect, texture: &'a Texture<'a> ) -> Player<'a>
+    {
+        Player { speed, location, texture_location, texture }
+    }
+        
     pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
     {
         canvas.copy(&self.texture, Some(self.texture_location), Some(self.location))?;
         Ok(())
     }
+
     pub fn move_player(&mut self, event: Event)
     {
         self.location.x += 5;

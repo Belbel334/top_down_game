@@ -1,3 +1,7 @@
+// ToDo:
+// - change tile to u32 and hashmap for comparing
+// - 
+
 use sdl2::render::{Texture, Canvas};
 use sdl2::video::Window;
 use sdl2::rect::Rect;
@@ -40,6 +44,15 @@ pub struct Camera {
 }
 
 impl Camera {
+    fn new (camera_mode: CameraMode, x: i32, y: i32) -> Camera
+    {
+        Camera {
+            camera_mode,
+            x,
+            y,
+        }
+    }
+
     fn move_tile (&self, tile: &mut Tile)
     {
         match self.camera_mode
@@ -93,7 +106,7 @@ pub enum TileHitBox
     None,
 }
 
-struct Tile<'a>
+pub struct Tile<'a>
 {
     location: Rect,
     texture_location: Rect,
@@ -118,7 +131,11 @@ pub struct TileMap<'a>
 
 impl TileMap<'_>
 {
-    fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
+    pub fn new<'a>(tiles: Vec<Vec<Tile<'a>>>)
+    {
+    }
+
+    pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
     {
         for tile_vec in &self.tiles
         {

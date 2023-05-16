@@ -1,9 +1,10 @@
-use sdl2::render::Texture;
-use sdl2::render::Canvas;
+use sdl2::render::{Texture, Canvas};
 use sdl2::video::Window;
 use sdl2::rect::Rect;
 use sdl2::keyboard::Keycode;
 use sdl2::event::Event;
+
+use std::vec::Vec;
 
 pub struct Game<'a>
 {
@@ -11,12 +12,12 @@ pub struct Game<'a>
     player: Player<'a>,
 }
 
-enum CameraMode {
+pub enum CameraMode {
     FollowPlayer,
     StaticLocation,
 }
 
-struct Camera {
+pub struct Camera {
     camera_mode: CameraMode,
     x: i32,
     y: i32,
@@ -64,7 +65,7 @@ impl Player<'_>
     }
 }
 
-enum TileHitBox
+pub enum TileHitBox
 {
     Full,
     None,
@@ -85,3 +86,27 @@ impl Tile<'_>
         Ok(())
     }
 }
+
+pub struct TileMap<'a>
+{
+    tiles: Vec<Vec<Tile<'a>>>,
+    x_tiles: u32,
+    y_tileo: u32,
+}
+
+impl TileMap<'_>
+{
+    fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
+    {
+        //canvas.copy(&self.texture, Some(self.texture_location), Some(self.location))?;
+        for tile_vec in &self.tiles
+        {
+            for tile in tile_vec
+            {
+                tile.draw(canvas)?;
+            }
+        }
+        Ok(())
+    }
+}
+

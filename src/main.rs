@@ -1,15 +1,15 @@
 extern crate sdl2;
 
 use sdl2::event::Event;
-use sdl2::rect::Rect;
+//use sdl2::rect::Rect;
 use sdl2::image::{InitFlag, LoadTexture};
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
-use sdl2::render::Texture;
-use sdl2::render::Canvas;
-use sdl2::video::Window;
+//use sdl2::render::Texture;
+//use sdl2::render::Canvas;
+//use sdl2::video::Window;
 
-use std::path::Path;
+//use std::path::Path;
 
 mod top_down;
 
@@ -21,7 +21,7 @@ fn main() -> Result<(), String> {
     let tile_size: i32 = 64;
 
     let window = video_subsystem
-        .window("Image Test", 13 * tile_size as u32, 7 * tile_size as u32)
+        .window("Top Down Game", 13 * tile_size as u32, 7 * tile_size as u32)
         .position_centered()
         .build()
         .map_err(|e| e.to_string())?;
@@ -32,9 +32,9 @@ fn main() -> Result<(), String> {
         .build()
         .map_err(|e| e.to_string())?;
 
-    let texture_creator = canvas.texture_creator();
+    //let texture_creator = canvas.texture_creator();
 
-    let texture = texture_creator.load_texture(Path::new("textures.png"));
+    //let texture = texture_creator.load_texture(Path::new("textures.png"));
 
     'mainloop: loop {
         for event in sdl_context.event_pump()?.poll_iter() {

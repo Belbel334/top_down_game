@@ -11,17 +11,9 @@ pub struct Game<'a>
     player: Player<'a>,
 }
 
-pub struct Player<'a> 
-{
-    speed: u32,
-    location: Rect,
-    texture_location: Rect,
-    texture: &'a Texture<'a>,
-}
-
 enum CameraMode {
     FollowPlayer,
-    OnePlace,
+    StaticLocation,
 }
 
 struct Camera {
@@ -31,7 +23,27 @@ struct Camera {
 }
 
 impl Camera {
+    fn move_tile (&self, tile: &mut Tile)
+    {
+        match self.camera_mode
+        {
+            CameraMode::FollowPlayer => 
+            {
+                tile.location.x -= self.x;
+                tile.location.y -= self.y;
+            },
+            CameraMode::StaticLocation => (),
+        }
+    }
 
+}
+
+pub struct Player<'a> 
+{
+    speed: u32,
+    location: Rect,
+    texture_location: Rect,
+    texture: &'a Texture<'a>,
 }
 
 impl Player<'_>
@@ -52,14 +64,20 @@ impl Player<'_>
     }
 }
 
-struct Obstacle<'a>
+enum TileHitBox
+{
+    Full,
+    None,
+}
+
+struct Tile<'a>
 {
     location: Rect,
     texture_location: Rect,
     texture: &'a Texture<'a>,
 }
 
-impl Obstacle<'_>
+impl Tile<'_>
 {
     fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
     {

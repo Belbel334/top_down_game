@@ -1,5 +1,4 @@
 // ToDo:
-// - change tile to u32 and hashmap for comparing
 // - 
 
 use sdl2::render::{Texture, Canvas};
@@ -15,7 +14,7 @@ pub struct Game<'a>
     tile_size: u32,
     pub camera: Camera,
     pub player: Player<'a>,
-    pub tile_map: TileMap<'a>,
+    pub tile_map: TileMap,
     
 }
 
@@ -122,14 +121,14 @@ impl Tile<'_>
     }
 }
 
-pub struct TileMap<'a>
+pub struct TileMap
 {
-    tiles: Vec<Vec<Tile<'a>>>,
+    tiles: Vec<Vec<u32>>,
     x_tiles: u32,
     y_tiles: u32,
 }
 
-impl TileMap<'_>
+impl TileMap
 {
     pub fn new<'a>(tiles: Vec<Vec<Tile<'a>>>)
     {
@@ -137,13 +136,13 @@ impl TileMap<'_>
 
     pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
     {
-        for tile_vec in &self.tiles
-        {
-            for tile in tile_vec
-            {
-                tile.draw(canvas)?;
-            }
-        }
+        //for tile_vec in &self.tiles
+        //{
+        //    for tile in tile_vec
+        //    {
+        //        tile.draw(canvas)?;
+        //    }
+        //}
         Ok(())
     }
 }

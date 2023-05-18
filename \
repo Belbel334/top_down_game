@@ -20,22 +20,9 @@ pub struct Game<'a>
 
 impl Game<'_>
 {
-    pub fn new<'a>(texture: &'a Texture, tile_size: u32,
-               camera_mode: CameraMode, camera_x: i32, camera_y: i32,
-               player_location: Rect, player_texture_location: Rect,
-               tiles: Vec<Vec<u32>>, tile_mode: HashMap<u32, Tile<'a>>, x_tiles: u32, y_tiles: u32,
-               ) -> Game<'a>
+    pub fn new(tile_size: u32, camera_mode: CameraMode, camera_x: i32, camera_y: i32)
     {
-        let camera = Camera { camera_mode, x: camera_x, y: camera_y };
-        let player = Player { speed: tile_size, location: player_location, texture_location: player_texture_location, texture };
-        let tile_map = TileMap { tiles, tile_mode, x_tiles, y_tiles, tile_size };
-
-        Game
-        {
-            camera,
-            player,
-            tile_map
-        }
+        let Camera { camera_mode, x, y };
     }
 
     pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>

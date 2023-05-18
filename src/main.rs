@@ -11,6 +11,7 @@ use sdl2::pixels::Color;
 
 use std::path::Path;
 
+
 mod top_down;
 
 fn main() -> Result<(), String> {
@@ -18,10 +19,10 @@ fn main() -> Result<(), String> {
     let video_subsystem = sdl_context.video()?;
     let _image_context = sdl2::image::init(InitFlag::PNG | InitFlag::JPG)?;
     
-    let tile_size: i32 = 64;
+    let tile_size: u32 = 64;
 
     let window = video_subsystem
-        .window("Top Down Game", 13 * tile_size as u32, 7 * tile_size as u32)
+        .window("Top Down Game", 13 * tile_size, 7 * tile_size)
         .position_centered()
         .build()
         .map_err(|e| e.to_string())?;
@@ -35,6 +36,11 @@ fn main() -> Result<(), String> {
     let texture_creator = canvas.texture_creator();
 
     let texture = texture_creator.load_texture(Path::new("textures.png"))?;
+
+    let game = top_down::Game::new(&texture, tile_size,
+                                   top_down::CameraMode::FollowPlayer, 0, 0,
+                                   Rect::new(64, 64, 64, 64), Rect::new(0, 0, 32, 32),
+                                   tiles, top_down::TileMode, x_tiles, y_tiles);
 
     'mainloop: loop {
         for event in sdl_context.event_pump()?.poll_iter() {

@@ -124,6 +124,19 @@ pub struct Tile<'a>
     texture: &'a Texture<'a>,
 }
 
+impl Tile<'_>
+{
+    pub fn new<'a>(hitbox: TileHitBox, texture_location: Rect, texture: &'a Texture<'a>) -> Tile
+    {
+        Tile 
+        {
+            hitbox,
+            texture_location,
+            texture
+        }
+    }
+}
+
 pub struct TileMap<'a>
 {
     tiles: Vec<Vec<u32>>,

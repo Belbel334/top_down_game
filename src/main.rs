@@ -9,7 +9,9 @@ use sdl2::pixels::Color;
 //use sdl2::render::Canvas;
 //use sdl2::video::Window;
 
+use std::vec::Vec;
 use std::path::Path;
+use std::collections::HashMap;
 
 
 mod top_down;
@@ -37,10 +39,24 @@ fn main() -> Result<(), String> {
 
     let texture = texture_creator.load_texture(Path::new("textures.png"))?;
 
+    let tiles = Vec::from([
+                          Vec::from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+                          Vec::from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+                          Vec::from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+                          Vec::from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+                          Vec::from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+                          Vec::from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+                          Vec::from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+                          Vec::from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+    ]);
+
+    let tile_mode = HashMap::from([(0, top_down::Tile::new(top_down::TileHitBox::None, Rect::new(32, 0, 64, 64), &texture))]);
+
     let game = top_down::Game::new(&texture, tile_size,
                                    top_down::CameraMode::FollowPlayer, 0, 0,
                                    Rect::new(64, 64, 64, 64), Rect::new(0, 0, 32, 32),
-                                   tiles, top_down::TileMode, x_tiles, y_tiles);
+                                   tiles, tile_mode, 13, 7
+                                  );
 
     'mainloop: loop {
         for event in sdl_context.event_pump()?.poll_iter() {

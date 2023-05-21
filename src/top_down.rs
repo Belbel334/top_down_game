@@ -1,5 +1,5 @@
 // ToDo:
-// - minimal playable game 
+// - put game logic in main.rs
 
 use sdl2::render::{Texture, Canvas};
 use sdl2::video::Window;
@@ -43,6 +43,11 @@ impl Game<'_>
         self.tile_map.draw(canvas)?;
         self.player.draw(canvas)?;
         Ok(())
+    }
+
+    pub fn update(&mut self, event: &Event, up_key: Keycode)
+    {
+        self.player.move_player(event, up_key);
     }
 }
 
@@ -90,23 +95,18 @@ pub struct Player<'a>
 
 impl Player<'_>
 {
-    pub fn new<'a> (speed: u32, location: Rect, texture_location: Rect, texture: &'a Texture<'a> ) -> Player<'a>
-    {
-        Player { speed, location, texture_location, texture }
-    }
-        
     pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
     {
         canvas.copy(&self.texture, Some(self.texture_location), Some(self.location))?;
         Ok(())
     }
 
-    pub fn move_player(&mut self, event: Event)
+    pub fn move_player(&mut self, event: &Event, up_key: Keycode)
     {
         self.location.x += 5;
-        match event
+        match &event
         {
-            Event::KeyDown{ keycode: Option::Some(Keycode::Up) , .. } => println!("mf"),
+            Event::KeyDown{ keycode: Option::Some(up_key) , .. } => println!("mf"),
             _ => ()
         }
     }
@@ -155,14 +155,6 @@ impl TileMap<'_>
 {
     pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
     {
-        //for tile_vec in &self.tiles
-        //{
-        //    for tile in tile_vec
-        //    {
-        //        // spaggeti 
-        //        canvas.copy(&self.tile_mode[tile].texture , Some(self.tile_mode[tile].get_texture_location()), Some(Rect::new(x, y, self.tile_size, self.tile_size)))?;
-        //    }
-        //}
         for x in 0..self.x_tiles
         {
             for y in 0..self.y_tiles

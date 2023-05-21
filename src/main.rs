@@ -52,7 +52,7 @@ fn main() -> Result<(), String> {
 
     let tile_mode = HashMap::from([(0, top_down::Tile::new(top_down::TileHitBox::None, Rect::new(32, 0, 32, 32), &texture))]);
 
-    let game = top_down::Game::new(&texture, tile_size,
+    let mut game = top_down::Game::new(&texture, tile_size,
                                    top_down::CameraMode::FollowPlayer, 0, 0,
                                    Rect::new(64, 64, 64, 64), Rect::new(0, 0, 32, 32),
                                    tiles, tile_mode, 13, 7
@@ -60,19 +60,20 @@ fn main() -> Result<(), String> {
 
     'mainloop: loop {
         for event in sdl_context.event_pump()?.poll_iter() {
+            game.update(&event, Keycode::Up);
+
             match event {
                 Event::Quit { .. } => break 'mainloop,
                 Event::KeyDown {keycode: Option::Some(Keycode::Up), ..} => (),
                 _ => {}
             }
-
-            canvas.set_draw_color(Color::RGB(45, 45, 45));
-            canvas.clear();
-
-            game.draw(&mut canvas)?;
-
-            canvas.present();
         }
+        canvas.set_draw_color(Color::RGB(45, 45, 45));
+        canvas.clear();
+
+        game.draw(&mut canvas)?;
+
+        canvas.present();
     }
 
     Ok(())

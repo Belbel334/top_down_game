@@ -50,7 +50,7 @@ fn main() -> Result<(), String> {
                           Vec::from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
     ]);
 
-    let tile_mode = HashMap::from([(0, top_down::Tile::new(top_down::TileHitBox::None, Rect::new(32, 0, 64, 64), &texture))]);
+    let tile_mode = HashMap::from([(0, top_down::Tile::new(top_down::TileHitBox::None, Rect::new(32, 0, 32, 32), &texture))]);
 
     let game = top_down::Game::new(&texture, tile_size,
                                    top_down::CameraMode::FollowPlayer, 0, 0,
@@ -68,6 +68,8 @@ fn main() -> Result<(), String> {
 
             canvas.set_draw_color(Color::RGB(45, 45, 45));
             canvas.clear();
+
+            game.draw(&mut canvas)?;
 
             canvas.present();
         }

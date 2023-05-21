@@ -40,6 +40,7 @@ impl Game<'_>
 
     pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
     {
+        self.tile_map.draw(canvas)?;
         self.player.draw(canvas)?;
         Ok(())
     }
@@ -135,6 +136,10 @@ impl Tile<'_>
             texture
         }
     }
+    pub fn get_texture_location(&self) -> Rect
+    {
+        self.texture_location
+    }
 }
 
 pub struct TileMap<'a>
@@ -148,17 +153,22 @@ pub struct TileMap<'a>
 
 impl TileMap<'_>
 {
-    pub fn new<'a>(tiles: Vec<Vec<Tile<'a>>>)
-    {
-    }
-
     pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
     {
-        for tile_vec in &self.tiles
+        //for tile_vec in &self.tiles
+        //{
+        //    for tile in tile_vec
+        //    {
+        //        // spaggeti 
+        //        canvas.copy(&self.tile_mode[tile].texture , Some(self.tile_mode[tile].get_texture_location()), Some(Rect::new(x, y, self.tile_size, self.tile_size)))?;
+        //    }
+        //}
+        for x in 0..self.x_tiles
         {
-            for tile in tile_vec
+            for y in 0..self.y_tiles
             {
-                canvas.copy(&self.tile_mode[tile].texture , None, None)?;
+                let tile = self.tiles[y as usize][x as usize];
+                canvas.copy(&self.tile_mode[&tile].texture, Some(self.tile_mode[&tile].get_texture_location()), Some(Rect::new((x * self.tile_size) as i32, (y * self.tile_size) as i32, self.tile_size, self.tile_size)))?;
             }
         }
         Ok(())

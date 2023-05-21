@@ -1,5 +1,6 @@
 // ToDo:
-// - 
+// - alling player and tilemap
+// - custom player input
 
 use sdl2::render::{Texture, Canvas};
 use sdl2::video::Window;
@@ -24,24 +25,38 @@ pub struct Camera {
 impl Camera {
     pub fn new (camera_mode: CameraMode, x: i32, y: i32) -> Camera
     {
-        Camera {
-            camera_mode,
-            x,
-            y,
-        }
+        Camera { camera_mode, x, y }
     }
 
-    fn move_tile (&self)
+    pub fn get_mode(&self) -> &CameraMode
+    {
+        &self.camera_mode
+    }
+
+    pub fn get_x(&self) -> i32 
+    {
+        self.x
+    }
+    
+    pub fn get_y(&self) -> i32 
+    {
+        self.y
+    }
+
+    pub fn move_camera(&mut self, player: &Player, screen_width: u32, screen_heigt: u32)
     {
         match self.camera_mode
         {
-            CameraMode::FollowPlayer => 
+            CameraMode::FollowPlayer =>
             {
-            },
-            CameraMode::StaticLocation => (),
+                let player_location = player.get_location();
+                
+                self.x = player_location.x - screen_width as i32 / 2;
+                self.y = player_location.y - screen_heigt as i32 / 2;
+            }
+            CameraMode::StaticLocation => ()
         }
     }
-
 }
 
 pub struct Player<'a> 
@@ -65,20 +80,34 @@ impl Player<'_>
         }
     }
 
-    pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
+    pub fn draw(&self, camera: &Camera, screen_width: u32, screen_heigt: u32, canvas: &mut Canvas<Window>) -> Result<(), String>
     {
-        canvas.copy(&self.texture, Some(self.texture_location), Some(self.location))?;
+        match camera.camera_mode
+        {
+            CameraMode::FollowPlayer =>
+            {
+                canvas.copy(&self.texture, Some(self.texture_location), Some(Rect::new((screen_width/2-self.location.width()/2) as i32, (screen_heigt/2-self.location.height()/2) as i32, self.location.width(), self.location.height())))?;
+            },
+            CameraMode::StaticLocation => ()
+        }
         Ok(())
     }
 
-    pub fn move_player(&mut self, event: &Event, up_key: Keycode)
+    pub fn move_player(&mut self, event: &Event, up_key: Keycode, down_key: Keycode, right_key: Keycode, left_key: Keycode)
     {
-        self.location.x += 5;
         match &event
         {
-            Event::KeyDown{ keycode: Option::Some(up_key) , .. } => println!("mf"),
+            Event::KeyDown{ keycode: Option::Some(Keycode::Up) , .. } => self.location.y -= self.speed as i32,
+            Event::KeyDown{ keycode: Option::Some(Keycode::Down) , .. } => self.location.y += self.speed as i32,
+            Event::KeyDown{ keycode: Option::Some(Keycode::Right) , .. } => self.location.x += self.speed as i32,
+            Event::KeyDown{ keycode: Option::Some(Keycode::Left) , .. } => self.location.x -= self.speed as i32,
             _ => ()
         }
+    }
+
+    pub fn get_location(&self) -> Rect
+    {
+        self.location
     }
 }
 
@@ -135,14 +164,18 @@ impl TileMap<'_>
         }
     }
 
-    pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>
+    pub fn draw(&self, camera: &Camera, canvas: &mut Canvas<Window>) -> Result<(), String>
     {
         for x in 0..self.x_tiles
         {
             for y in 0..self.y_tiles
             {
                 let tile = self.tiles[y as usize][x as usize];
-                canvas.copy(&self.tile_mode[&tile].texture, Some(self.tile_mode[&tile].get_texture_location()), Some(Rect::new((x * self.tile_size) as i32, (y * self.tile_size) as i32, self.tile_size, self.tile_size)))?;
+
+                canvas.copy(&self.tile_mode[&tile].texture,
+                            Some(self.tile_mode[&tile].get_texture_location()),
+                            Some(Rect::new((x * self.tile_size) as i32 - camera.get_x(), (y * self.tile_size) as i32 - camera.get_y(),
+                            self.tile_size, self.tile_size)))?;
             }
         }
         Ok(())

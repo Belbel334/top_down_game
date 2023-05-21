@@ -23,8 +23,11 @@ fn main() -> Result<(), String> {
     
     let tile_size: u32 = 64;
 
+    let screen_width: u32 = 13 * tile_size;
+    let screen_height: u32 = 9 * tile_size;
+
     let window = video_subsystem
-        .window("Top Down Game", 13 * tile_size, 7 * tile_size)
+        .window("Top Down Game", screen_width, screen_height)
         .position_centered()
         .build()
         .map_err(|e| e.to_string())?;
@@ -52,9 +55,9 @@ fn main() -> Result<(), String> {
 
     let tile_mode = HashMap::from([(0, top_down::Tile::new(top_down::TileHitBox::None, Rect::new(32, 0, 32, 32), &texture))]);
 
-    let camera = top_down::Camera::new(top_down::CameraMode::FollowPlayer, 0, 0);
+    let mut camera = top_down::Camera::new(top_down::CameraMode::FollowPlayer, 64, 64);
 
-    let player = top_down::Player::new(tile_size, Rect::new(64, 64, 64, 64), Rect::new(0, 0, 32, 32), &texture);
+    let mut player = top_down::Player::new(tile_size, Rect::new(0, 64, 64, 64), Rect::new(0, 0, 32, 32), &texture);
 
     let tile_map = top_down::TileMap::new(tiles, tile_mode, 13, 7, tile_size);
 
@@ -66,12 +69,15 @@ fn main() -> Result<(), String> {
                 Event::KeyDown {keycode: Option::Some(Keycode::Up), ..} => (),
                 _ => {}
             }
+            player.move_player(&event, Keycode::Up, Keycode::Down, Keycode::Right, Keycode::Left);
         }
+        camera.move_camera(&player, screen_width, screen_height);
+
         canvas.set_draw_color(Color::RGB(45, 45, 45));
         canvas.clear();
 
-        tile_map.draw(&mut canvas)?;
-        player.draw(&mut canvas)?;
+        tile_map.draw(&camera, &mut canvas)?;
+        player.draw(&camera, screen_width, screen_height, &mut canvas)?;
 
         canvas.present();
     }

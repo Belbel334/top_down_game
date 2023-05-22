@@ -55,24 +55,29 @@ impl Camera {
 pub struct Player<'a> 
 {
     speed: u32,
+    tile_size: u32,
     location: Rect,
     texture_location: Rect,
     texture: &'a Texture<'a>,
     is_moving: bool,
+    has_moved: u32,
     direction: u8,
 }
 
 impl Player<'_>
 {
-    pub fn new<'a>(speed: u32, location: Rect, texture_location: Rect, texture: &'a Texture<'a>) -> Player
+    pub fn new<'a>(tile_size: u32, speed: u32, location: Rect, texture_location: Rect, texture: &'a Texture<'a>) -> Player
     {
         Player
         {
             speed,
+            tile_size,
             location,
             texture_location,
             texture,
+
             is_moving: false,
+            has_moved: 0, // amount of pixels moved
             direction: 0, // 0: no movement, 1: up, 2: right, 3: down, 4: left
         }
     }
@@ -93,7 +98,7 @@ impl Player<'_>
         Ok(())
     }
 
-    pub fn move_player(&mut self, tile_map: &TileMap, keycode: Keycode, up_key: Keycode, down_key: Keycode, right_key: Keycode, left_key: Keycode)
+    pub fn get_input(&mut self, keycode: Keycode, up_key: Keycode, down_key: Keycode, right_key: Keycode, left_key: Keycode)
     {
         match keycode
         {
@@ -115,49 +120,98 @@ impl Player<'_>
             },
             _ => ()
         }
+    }
+
+    pub fn move_player(&mut self, tile_map: &TileMap)
+    {
         match self.direction
         {
             1 =>
             {
-                self.location.y -= self.speed as i32;
+                self.location.y -= self.speed as i32; 
+                self.has_moved += self.speed; 
 
-                match tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox()
+                match tile_map.get_tile(self.location.x as u32 / self.tile_size, self.location.y as u32 / self.tile_size).get_hitbox()
                 {
-                    &TileHitBox::Full => self.location.y += self.speed as i32,
+                    &TileHitBox::Full => 
+                    {
+                        self.direction = 0;
+                        self.location.y += self.speed as i32; 
+                    },
                     _ => (),
                 }
-                self.direction = 0;
-            },
-            3 =>
-            {
-                self.location.y += self.speed as i32;
-
-                match tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox()
+                
+                if self.has_moved > self.tile_size
                 {
-                    &TileHitBox::Full => self.location.y -= self.speed as i32,
-                    _ => (),
+                    self.direction = 0;
+                    self.has_moved = 0;
+                    self.location.y += self.speed as i32; 
                 }
-                self.direction = 0;
             },
             2 =>
             {
-                self.location.x += self.speed as i32;
+                self.location.x += self.speed as i32; 
+                self.has_moved += self.speed; 
 
-                match tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox()
+                match tile_map.get_tile(self.location.x as u32 / self.tile_size, self.location.y as u32 / self.tile_size).get_hitbox()
                 {
-                    &TileHitBox::Full => self.location.x -= self.speed as i32,
+                    &TileHitBox::Full => 
+                    {
+                        self.direction = 0;
+                        self.location.x -= self.speed as i32; 
+                    },
                     _ => (),
                 }
-                self.direction = 0;
+                
+                if self.has_moved > self.tile_size
+                {
+                    self.direction = 0;
+                    self.has_moved = 0;
+                    self.location.x -= self.speed as i32; 
+                }
+            },
+            3 =>
+            {
+                self.location.y += self.speed as i32; 
+                self.has_moved += self.speed; 
+
+                match tile_map.get_tile(self.location.x as u32 / self.tile_size, self.location.y as u32 / self.tile_size).get_hitbox()
+                {
+                    &TileHitBox::Full => 
+                    {
+                        self.direction = 0;
+                        self.location.y -= self.speed as i32; 
+                    },
+                    _ => (),
+                }
+                
+                if self.has_moved > self.tile_size
+                {
+                    self.direction = 0;
+                    self.has_moved = 0;
+                    self.location.y -= self.speed as i32; 
+                }
             },
             4 =>
             {
-                self.location.x -= self.speed as i32;
-                
-                match tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox()
+                self.location.x -= self.speed as i32; 
+                self.has_moved += self.speed; 
+
+                match tile_map.get_tile(self.location.x as u32 / self.tile_size, self.location.y as u32 / self.tile_size).get_hitbox()
                 {
-                    &TileHitBox::Full => self.location.x += self.speed as i32,
+                    &TileHitBox::Full => 
+                    {
+                        self.direction = 0;
+                        self.location.x += self.speed as i32; 
+                    },
                     _ => (),
+                }
+                
+                if self.has_moved > self.tile_size
+                {
+                    self.direction = 0;
+                    self.has_moved = 0;
+                    self.location.x += self.speed as i32; 
                 }
             },
             _ => ()

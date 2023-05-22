@@ -61,7 +61,7 @@ fn main() -> Result<(), String> {
 
     let mut camera = top_down::Camera::new(top_down::CameraMode::FollowPlayer, 64, 64);
 
-    let mut player = top_down::Player::new(64, Rect::new(128, 128, 64, 64), Rect::new(0, 0, 32, 32), &texture);
+    let mut player = top_down::Player::new(tile_size, 2, Rect::new(256, 256, 64, 64), Rect::new(0, 0, 32, 32), &texture);
 
     let tile_map = top_down::TileMap::new(tiles, tile_mode, 13, 9, tile_size);
 
@@ -73,11 +73,15 @@ fn main() -> Result<(), String> {
                 Event::Quit { .. } => break 'mainloop,
                 Event::KeyDown { keycode: Some(keycode), .. } => {
                     // player movement
-                    player.move_player(&tile_map, keycode, Keycode::Up, Keycode::Down, Keycode::Right, Keycode::Left);
+                    player.get_input(keycode, Keycode::Up, Keycode::Down, Keycode::Right, Keycode::Left);
                 }
                 _ => {}
             }
         }
+
+        // moving the player
+        player.move_player(&tile_map);
+
         // moving the camera 
         camera.move_camera(&player, screen_width, screen_height);
 
@@ -85,10 +89,13 @@ fn main() -> Result<(), String> {
         canvas.set_draw_color(Color::RGB(45, 45, 45));
         canvas.clear();
 
-        // rendering the screen
+        // drawing the tilemap
         tile_map.draw(&camera, &mut canvas)?;
+
+        // drawing the player
         player.draw(&camera, screen_width, screen_height, &mut canvas)?;
 
+        // drawing to the screen
         canvas.present();
     }
 

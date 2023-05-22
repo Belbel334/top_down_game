@@ -67,9 +67,11 @@ fn main() -> Result<(), String> {
             match event {
                 Event::Quit { .. } => break 'mainloop,
                 Event::KeyDown {keycode: Option::Some(Keycode::Up), ..} => (),
+                Event::KeyDown { keycode: Some(keycode), .. } => {
+                    player.move_player(keycode, Keycode::Up, Keycode::Down, Keycode::Right, Keycode::Left);
+                }
                 _ => {}
             }
-            player.move_player(&event, Keycode::Up, Keycode::Down, Keycode::Right, Keycode::Left);
         }
         camera.move_camera(&player, screen_width, screen_height);
 

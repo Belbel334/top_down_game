@@ -92,14 +92,14 @@ impl Player<'_>
         Ok(())
     }
 
-    pub fn move_player(&mut self, event: &Event, up_key: Keycode, down_key: Keycode, right_key: Keycode, left_key: Keycode)
+    pub fn move_player(&mut self, keycode: Keycode, up_key: Keycode, down_key: Keycode, right_key: Keycode, left_key: Keycode)
     {
-        match &event
+        match keycode
         {
-            Event::KeyDown{ keycode: Option::Some(Keycode::Up) , .. } => self.location.y -= self.speed as i32,
-            Event::KeyDown{ keycode: Option::Some(Keycode::Down) , .. } => self.location.y += self.speed as i32,
-            Event::KeyDown{ keycode: Option::Some(Keycode::Right) , .. } => self.location.x += self.speed as i32,
-            Event::KeyDown{ keycode: Option::Some(Keycode::Left) , .. } => self.location.x -= self.speed as i32,
+            key if key == up_key => self.location.y -= self.speed as i32,
+            key if key == down_key => self.location.y += self.speed as i32,
+            key if key == right_key => self.location.x += self.speed as i32,
+            key if key == left_key => self.location.x -= self.speed as i32,
             _ => ()
         }
     }

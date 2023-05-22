@@ -1,5 +1,5 @@
 // ToDo:
-// - 
+// - collision with full tiles
 
 use sdl2::render::{Texture, Canvas};
 use sdl2::video::Window;

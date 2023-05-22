@@ -44,19 +44,22 @@ fn main() -> Result<(), String> {
                           Vec::from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
                           Vec::from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
                           Vec::from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
-                          Vec::from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+                          Vec::from([0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0]),
+                          Vec::from([0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0]),
+                          Vec::from([0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0]),
                           Vec::from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
                           Vec::from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
                           Vec::from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
     ]);
 
-    let tile_mode = HashMap::from([(0, top_down::Tile::new(top_down::TileHitBox::None, Rect::new(32, 0, 32, 32), &texture))]);
+    let tile_mode = HashMap::from([(0, top_down::Tile::new(top_down::TileHitBox::None, Rect::new(32, 0, 32, 32), &texture)),
+                                   (1, top_down::Tile::new(top_down::TileHitBox::Full, Rect::new(0, 32, 32, 32), &texture))]);
 
     let mut camera = top_down::Camera::new(top_down::CameraMode::FollowPlayer, 64, 64);
 
-    let mut player = top_down::Player::new(64, Rect::new(0, 0, 64, 64), Rect::new(0, 0, 32, 32), &texture);
+    let mut player = top_down::Player::new(64, Rect::new(128, 128, 64, 64), Rect::new(0, 0, 32, 32), &texture);
 
-    let tile_map = top_down::TileMap::new(tiles, tile_mode, 13, 7, tile_size);
+    let tile_map = top_down::TileMap::new(tiles, tile_mode, 13, 9, tile_size);
 
     'mainloop: loop {
         for event in sdl_context.event_pump()?.poll_iter() {

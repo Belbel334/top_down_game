@@ -5,9 +5,6 @@ use sdl2::rect::Rect;
 use sdl2::image::{InitFlag, LoadTexture};
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
-//use sdl2::render::Texture;
-//use sdl2::render::Canvas;
-//use sdl2::video::Window;
 
 use std::vec::Vec;
 use std::path::Path;
@@ -66,7 +63,6 @@ fn main() -> Result<(), String> {
 
             match event {
                 Event::Quit { .. } => break 'mainloop,
-                Event::KeyDown {keycode: Option::Some(Keycode::Up), ..} => (),
                 Event::KeyDown { keycode: Some(keycode), .. } => {
                     player.move_player(keycode, Keycode::Up, Keycode::Down, Keycode::Right, Keycode::Left);
                 }

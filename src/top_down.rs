@@ -91,12 +91,15 @@ impl Player<'_>
 
     pub fn move_player(&mut self, tile_map: &TileMap, keycode: Keycode, up_key: Keycode, down_key: Keycode, right_key: Keycode, left_key: Keycode)
     {
+        let tile_hitbox = tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox();
+
         match keycode
         {
             key if key == up_key =>
             {
                 self.location.y -= self.speed as i32;
-                match tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox()
+
+                match tile_hitbox
                 {
                     &TileHitBox::Full => self.location.y += self.speed as i32,
                     _ => (),
@@ -105,7 +108,8 @@ impl Player<'_>
             key if key == down_key =>
             {
                 self.location.y += self.speed as i32;
-                match tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox()
+
+                match tile_hitbox
                 {
                     &TileHitBox::Full => self.location.y -= self.speed as i32,
                     _ => (),
@@ -114,7 +118,8 @@ impl Player<'_>
             key if key == right_key =>
             {
                 self.location.x += self.speed as i32;
-                match tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox()
+
+                match tile_hitbox
                 {
                     &TileHitBox::Full => self.location.x -= self.speed as i32,
                     _ => (),
@@ -123,7 +128,8 @@ impl Player<'_>
             key if key == left_key =>
             {
                 self.location.x -= self.speed as i32;
-                match tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox()
+                
+                match tile_hitbox
                 {
                     &TileHitBox::Full => self.location.x += self.speed as i32,
                     _ => (),

@@ -59,6 +59,7 @@ pub struct Player<'a>
     location: Rect,
     texture_location: Rect,
     texture: &'a Texture<'a>,
+    
     is_moving: bool,
     has_moved: u32,
     direction: u8,
@@ -104,19 +105,35 @@ impl Player<'_>
         {
             key if key == up_key =>
             {
-                self.direction = 1;
+                if !self.is_moving
+                {
+                    self.direction = 1;
+                    self.is_moving = true;
+                }
             },
             key if key == down_key =>
             {
-                self.direction = 3;
+                if !self.is_moving
+                {
+                    self.direction = 3;
+                    self.is_moving = true;
+                }
             },
             key if key == right_key =>
             {
-                self.direction = 2;
+                if !self.is_moving
+                {
+                    self.direction = 2;
+                    self.is_moving = true;
+                }
             },
             key if key == left_key =>
             {
-                self.direction = 4;
+                if !self.is_moving
+                {
+                    self.direction = 4;
+                    self.is_moving = true;
+                }
             },
             _ => ()
         }
@@ -124,6 +141,16 @@ impl Player<'_>
 
     pub fn move_player(&mut self, tile_map: &TileMap)
     {
+        println!("{}, {}", self.location.x as u32 / self.tile_size, self.location.y as u32 / self.tile_size);
+        match tile_map.get_tile( self.location.x as u32 / self.tile_size, self.location.y as u32 / self.tile_size ).get_hitbox()
+        {
+                    &TileHitBox::Full => 
+                    {
+                        println!("FULL");
+                    },
+                    _ => (),
+        }
+
         match self.direction
         {
             1 =>
@@ -131,21 +158,23 @@ impl Player<'_>
                 self.location.y -= self.speed as i32; 
                 self.has_moved += self.speed; 
 
-                match tile_map.get_tile(self.location.x as u32 / self.tile_size, self.location.y as u32 / self.tile_size).get_hitbox()
+                match tile_map.get_tile( self.location.x as u32 / self.tile_size, self.location.y as u32 / self.tile_size ).get_hitbox()
                 {
                     &TileHitBox::Full => 
                     {
                         self.direction = 0;
+                        self.has_moved = 0;
+                        self.is_moving = false;
                         self.location.y += self.speed as i32; 
                     },
                     _ => (),
                 }
                 
-                if self.has_moved > self.tile_size
+                if self.has_moved >= self.tile_size
                 {
                     self.direction = 0;
                     self.has_moved = 0;
-                    self.location.y += self.speed as i32; 
+                        self.is_moving = false;
                 }
             },
             2 =>
@@ -153,21 +182,23 @@ impl Player<'_>
                 self.location.x += self.speed as i32; 
                 self.has_moved += self.speed; 
 
-                match tile_map.get_tile(self.location.x as u32 / self.tile_size, self.location.y as u32 / self.tile_size).get_hitbox()
+                match tile_map.get_tile(self.location.x as u32 / self.tile_size + 1, self.location.y as u32 / self.tile_size).get_hitbox()
                 {
                     &TileHitBox::Full => 
                     {
                         self.direction = 0;
+                        self.is_moving = false;
                         self.location.x -= self.speed as i32; 
+                        self.has_moved = 0;
                     },
                     _ => (),
                 }
                 
-                if self.has_moved > self.tile_size
+                if self.has_moved >= self.tile_size
                 {
                     self.direction = 0;
                     self.has_moved = 0;
-                    self.location.x -= self.speed as i32; 
+                        self.is_moving = false;
                 }
             },
             3 =>
@@ -175,21 +206,23 @@ impl Player<'_>
                 self.location.y += self.speed as i32; 
                 self.has_moved += self.speed; 
 
-                match tile_map.get_tile(self.location.x as u32 / self.tile_size, self.location.y as u32 / self.tile_size).get_hitbox()
+                match tile_map.get_tile(self.location.x as u32 / self.tile_size, self.location.y as u32 / self.tile_size + 1).get_hitbox()
                 {
                     &TileHitBox::Full => 
                     {
                         self.direction = 0;
+                        self.is_moving = false;
                         self.location.y -= self.speed as i32; 
+                        self.has_moved = 0;
                     },
                     _ => (),
                 }
                 
-                if self.has_moved > self.tile_size
+                if self.has_moved >= self.tile_size
                 {
                     self.direction = 0;
                     self.has_moved = 0;
-                    self.location.y -= self.speed as i32; 
+                        self.is_moving = false;
                 }
             },
             4 =>
@@ -202,18 +235,20 @@ impl Player<'_>
                     &TileHitBox::Full => 
                     {
                         self.direction = 0;
+                        self.is_moving = false;
                         self.location.x += self.speed as i32; 
+                        self.has_moved = 0;
                     },
                     _ => (),
                 }
                 
-                if self.has_moved > self.tile_size
+                if self.has_moved >= self.tile_size
                 {
                     self.direction = 0;
+                        self.is_moving = false;
                     self.has_moved = 0;
-                    self.location.x += self.speed as i32; 
                 }
-            },
+                },
             _ => ()
         }
     }

@@ -58,6 +58,8 @@ pub struct Player<'a>
     location: Rect,
     texture_location: Rect,
     texture: &'a Texture<'a>,
+    is_moving: bool,
+    direction: u8,
 }
 
 impl Player<'_>
@@ -69,7 +71,9 @@ impl Player<'_>
             speed,
             location,
             texture_location,
-            texture
+            texture,
+            is_moving: false,
+            direction: 0, // 0: no movement, 1: up, 2: right, 3: down, 4: left
         }
     }
 
@@ -91,45 +95,66 @@ impl Player<'_>
 
     pub fn move_player(&mut self, tile_map: &TileMap, keycode: Keycode, up_key: Keycode, down_key: Keycode, right_key: Keycode, left_key: Keycode)
     {
-        let tile_hitbox = tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox();
-
         match keycode
         {
             key if key == up_key =>
             {
+                self.direction = 1;
+            },
+            key if key == down_key =>
+            {
+                self.direction = 3;
+            },
+            key if key == right_key =>
+            {
+                self.direction = 2;
+            },
+            key if key == left_key =>
+            {
+                self.direction = 4;
+            },
+            _ => ()
+        }
+        match self.direction
+        {
+            1 =>
+            {
                 self.location.y -= self.speed as i32;
 
-                match tile_hitbox
+                match tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox()
                 {
                     &TileHitBox::Full => self.location.y += self.speed as i32,
                     _ => (),
                 }
+                self.direction = 0;
             },
-            key if key == down_key =>
+            3 =>
             {
                 self.location.y += self.speed as i32;
 
-                match tile_hitbox
+                match tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox()
                 {
                     &TileHitBox::Full => self.location.y -= self.speed as i32,
                     _ => (),
                 }
+                self.direction = 0;
             },
-            key if key == right_key =>
+            2 =>
             {
                 self.location.x += self.speed as i32;
 
-                match tile_hitbox
+                match tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox()
                 {
                     &TileHitBox::Full => self.location.x -= self.speed as i32,
                     _ => (),
                 }
+                self.direction = 0;
             },
-            key if key == left_key =>
+            4 =>
             {
                 self.location.x -= self.speed as i32;
                 
-                match tile_hitbox
+                match tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox()
                 {
                     &TileHitBox::Full => self.location.x += self.speed as i32,
                     _ => (),

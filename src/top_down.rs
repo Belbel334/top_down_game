@@ -5,7 +5,6 @@ use sdl2::render::{Texture, Canvas};
 use sdl2::video::Window;
 use sdl2::rect::Rect;
 use sdl2::keyboard::Keycode;
-use sdl2::event::Event;
 
 use std::vec::Vec;
 use std::collections::HashMap;
@@ -25,11 +24,6 @@ impl Camera {
     pub fn new (camera_mode: CameraMode, x: i32, y: i32) -> Camera
     {
         Camera { camera_mode, x, y }
-    }
-
-    pub fn get_mode(&self) -> &CameraMode
-    {
-        &self.camera_mode
     }
 
     pub fn get_x(&self) -> i32 

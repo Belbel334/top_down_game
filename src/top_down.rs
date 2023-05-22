@@ -1,5 +1,4 @@
 // ToDo:
-// - alling player and tilemap
 // - custom player input
 
 use sdl2::render::{Texture, Canvas};
@@ -51,8 +50,8 @@ impl Camera {
             {
                 let player_location = player.get_location();
                 
-                self.x = player_location.x - screen_width as i32 / 2;
-                self.y = player_location.y - screen_heigt as i32 / 2;
+                self.x = player_location.x - screen_width as i32 / 2 + player_location.width() as i32 / 2;
+                self.y = player_location.y - screen_heigt as i32 / 2 + player_location.height() as i32 / 2;
             }
             CameraMode::StaticLocation => ()
         }

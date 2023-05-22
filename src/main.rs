@@ -57,7 +57,7 @@ fn main() -> Result<(), String> {
 
     let mut camera = top_down::Camera::new(top_down::CameraMode::FollowPlayer, 64, 64);
 
-    let mut player = top_down::Player::new(tile_size, Rect::new(0, 64, 64, 64), Rect::new(0, 0, 32, 32), &texture);
+    let mut player = top_down::Player::new(64, Rect::new(0, 0, 64, 64), Rect::new(0, 0, 32, 32), &texture);
 
     let tile_map = top_down::TileMap::new(tiles, tile_mode, 13, 7, tile_size);
 

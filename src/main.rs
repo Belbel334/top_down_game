@@ -67,7 +67,7 @@ fn main() -> Result<(), String> {
             match event {
                 Event::Quit { .. } => break 'mainloop,
                 Event::KeyDown { keycode: Some(keycode), .. } => {
-                    player.move_player(keycode, Keycode::Up, Keycode::Down, Keycode::Right, Keycode::Left);
+                    player.move_player(&tile_map, keycode, Keycode::Up, Keycode::Down, Keycode::Right, Keycode::Left);
                 }
                 _ => {}
             }

@@ -1,5 +1,5 @@
 // ToDo:
-// - collision with full tiles
+// - smooth player movement
 
 use sdl2::render::{Texture, Canvas};
 use sdl2::video::Window;
@@ -79,21 +79,56 @@ impl Player<'_>
         {
             CameraMode::FollowPlayer =>
             {
-                canvas.copy(&self.texture, Some(self.texture_location), Some(Rect::new((screen_width/2-self.location.width()/2) as i32, (screen_heigt/2-self.location.height()/2) as i32, self.location.width(), self.location.height())))?;
+                canvas.copy(&self.texture, Some(self.texture_location),
+                Some(Rect::new((screen_width/2-self.location.width()/2) as i32,
+                (screen_heigt/2-self.location.height()/2) as i32, 
+                self.location.width(), self.location.height())))?;
             },
             CameraMode::StaticLocation => ()
         }
         Ok(())
     }
 
-    pub fn move_player(&mut self, keycode: Keycode, up_key: Keycode, down_key: Keycode, right_key: Keycode, left_key: Keycode)
+    pub fn move_player(&mut self, tile_map: &TileMap, keycode: Keycode, up_key: Keycode, down_key: Keycode, right_key: Keycode, left_key: Keycode)
     {
         match keycode
         {
-            key if key == up_key => self.location.y -= self.speed as i32,
-            key if key == down_key => self.location.y += self.speed as i32,
-            key if key == right_key => self.location.x += self.speed as i32,
-            key if key == left_key => self.location.x -= self.speed as i32,
+            key if key == up_key =>
+            {
+                self.location.y -= self.speed as i32;
+                match tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox()
+                {
+                    &TileHitBox::Full => self.location.y += self.speed as i32,
+                    _ => (),
+                }
+            },
+            key if key == down_key =>
+            {
+                self.location.y += self.speed as i32;
+                match tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox()
+                {
+                    &TileHitBox::Full => self.location.y -= self.speed as i32,
+                    _ => (),
+                }
+            },
+            key if key == right_key =>
+            {
+                self.location.x += self.speed as i32;
+                match tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox()
+                {
+                    &TileHitBox::Full => self.location.x -= self.speed as i32,
+                    _ => (),
+                }
+            },
+            key if key == left_key =>
+            {
+                self.location.x -= self.speed as i32;
+                match tile_map.get_tile(self.location.x as u32 / self.speed, self.location.y as u32 / self.speed).get_hitbox()
+                {
+                    &TileHitBox::Full => self.location.x += self.speed as i32,
+                    _ => (),
+                }
+            },
             _ => ()
         }
     }
@@ -128,9 +163,15 @@ impl Tile<'_>
             texture
         }
     }
+
     pub fn get_texture_location(&self) -> Rect
     {
         self.texture_location
+    }
+
+    pub fn get_hitbox(&self) -> &TileHitBox
+    {
+        &self.hitbox
     }
 }
 
@@ -172,6 +213,11 @@ impl TileMap<'_>
             }
         }
         Ok(())
+    }
+
+    pub fn get_tile(&self, x: u32, y: u32) -> &Tile
+    {
+        &self.tile_mode[&self.tiles[y as usize][x as usize]]
     }
 }
 

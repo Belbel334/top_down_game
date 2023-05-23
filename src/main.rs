@@ -1,6 +1,5 @@
 // ToDo:
 // - player collision
-// - fixed fps 
 // - better file organization
 
 extern crate sdl2;
@@ -14,11 +13,19 @@ use sdl2::pixels::Color;
 use std::vec::Vec;
 use std::path::Path;
 use std::collections::HashMap;
+use std::time::{Instant, Duration};
 
 
 mod top_down;
 
 fn main() -> Result<(), String> {
+    // fps variables 
+    let fps = 60; // the fps you want
+    let frame_delay = 1000 / fps; // the time each frame should take in miliseconds 
+
+    let mut loop_instant;
+    let mut time_elapsed;
+
     // setting up sdl2
     let sdl_context = sdl2::init()?;
     let video_subsystem = sdl_context.video()?;
@@ -66,11 +73,13 @@ fn main() -> Result<(), String> {
 
     let mut camera = top_down::Camera::new(top_down::CameraMode::FollowPlayer, 64, 64);
 
-    let mut player = top_down::Player::new(tile_size, 1, Rect::new(256, 256, 64, 64), Rect::new(0, 0, 32, 32), &texture);
+    let mut player = top_down::Player::new(tile_size, 4, Rect::new(256, 256, 64, 64), Rect::new(0, 0, 32, 32), &texture);
 
     let tile_map = top_down::TileMap::new(tiles, tile_mode, 13, 9, tile_size);
 
     'mainloop: loop {
+        loop_instant = Instant::now();
+
         for event in sdl_context.event_pump()?.poll_iter() {
 
             match event {
@@ -85,7 +94,7 @@ fn main() -> Result<(), String> {
         }
 
         // moving the player
-        player.move_player(&tile_map);
+        player.move_player();
 
         // moving the camera 
         camera.move_camera(&player, screen_width, screen_height);
@@ -102,6 +111,11 @@ fn main() -> Result<(), String> {
 
         // drawing to the screen
         canvas.present();
+
+        time_elapsed = Instant::now() - loop_instant;
+        if time_elapsed.as_millis() < frame_delay {
+            std::thread::sleep( Duration::from_millis( ( frame_delay - time_elapsed.as_millis() ) as u64 ) );
+        }
     }
 
     Ok(())

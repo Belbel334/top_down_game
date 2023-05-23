@@ -1,5 +1,5 @@
 // ToDo:
-// - better file organization
+// - more comments
 
 extern crate sdl2;
 

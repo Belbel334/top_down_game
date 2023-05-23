@@ -70,7 +70,7 @@ fn main() -> Result<(), String> {
     let tile_mode = HashMap::from([(0, tile_map::Tile::new(tile_map::TileHitBox::None, Rect::new(32, 0, 32, 32), &texture)),
                                    (1, tile_map::Tile::new(tile_map::TileHitBox::Full, Rect::new(0, 32, 32, 32), &texture))]);
 
-    let mut camera = camera::Camera::new(camera::CameraMode::FollowPlayer, 64, 64);
+    let mut camera = camera::Camera::new(camera::CameraMode::FollowPlayer, 0, 0);
 
     let mut player = player::Player::new(tile_size, 4, Rect::new(256, 256, 64, 64), Rect::new(0, 0, 32, 32), &texture);
 

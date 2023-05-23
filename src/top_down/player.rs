@@ -3,8 +3,8 @@ use sdl2::video::Window;
 use sdl2::rect::Rect;
 use sdl2::keyboard::Keycode;
 
-use crate::Camera::{Camera, CameraMode};
-use crate::TileMap::{TileMap, TileHitBox};
+use crate::camera::{Camera, CameraMode};
+use crate::tile_map::{TileMap, TileHitBox};
 
 pub struct Player<'a> 
 {

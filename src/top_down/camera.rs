@@ -1,4 +1,4 @@
-use crate::top_down::Player::Player;
+use crate::player::Player;
 
 pub enum CameraMode {
     FollowPlayer,

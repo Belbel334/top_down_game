@@ -14,8 +14,8 @@ use std::path::Path;
 use std::collections::HashMap;
 use std::time::{Instant, Duration};
 
-
-mod top_down;
+use top_down::{Camera, TileMap, Player};
+pub mod top_down;
 
 fn main() -> Result<(), String> {
     // fps variables 
@@ -67,14 +67,14 @@ fn main() -> Result<(), String> {
                           Vec::from([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]),
     ]);
 
-    let tile_mode = HashMap::from([(0, top_down::Tile::new(top_down::TileHitBox::None, Rect::new(32, 0, 32, 32), &texture)),
-                                   (1, top_down::Tile::new(top_down::TileHitBox::Full, Rect::new(0, 32, 32, 32), &texture))]);
+    let tile_mode = HashMap::from([(0, TileMap::Tile::new(TileMap::TileHitBox::None, Rect::new(32, 0, 32, 32), &texture)),
+                                   (1, TileMap::Tile::new(TileMap::TileHitBox::Full, Rect::new(0, 32, 32, 32), &texture))]);
 
-    let mut camera = top_down::Camera::new(top_down::CameraMode::FollowPlayer, 64, 64);
+    let mut camera = Camera::Camera::new(Camera::CameraMode::FollowPlayer, 64, 64);
 
-    let mut player = top_down::Player::new(tile_size, 4, Rect::new(256, 256, 64, 64), Rect::new(0, 0, 32, 32), &texture);
+    let mut player = Player::Player::new(tile_size, 4, Rect::new(256, 256, 64, 64), Rect::new(0, 0, 32, 32), &texture);
 
-    let tile_map = top_down::TileMap::new(tiles, tile_mode, 13, 9, tile_size);
+    let tile_map = TileMap::TileMap::new(tiles, tile_mode, 13, 9, tile_size);
 
     'mainloop: loop {
         loop_instant = Instant::now();

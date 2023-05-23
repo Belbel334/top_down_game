@@ -1,3 +1,4 @@
+use sdl2::libc::LOCK_SH;
 use sdl2::render::{Texture, Canvas};
 use sdl2::video::Window;
 use sdl2::rect::Rect;
@@ -41,13 +42,22 @@ impl Player<'_>
         {
             CameraMode::FollowPlayer =>
             {
-                // copying player to the canvas
-                canvas.copy(&self.texture, Some(self.texture_location),
-                Some(Rect::new((screen_width/2-self.location.width()/2) as i32,
-                (screen_heigt/2-self.location.height()/2) as i32, 
-                self.location.width(), self.location.height())))?;
+                // selecting texture and texture location
+                canvas.copy(&self.texture, self.texture_location,
+                            // putting player in the center of the screen
+                            Rect::new(( screen_width / 2 - self.location.width() / 2 ) as i32,
+                                      ( screen_heigt / 2 - self.location.height() / 2 ) as i32, 
+                                      self.location.width(), self.location.height()))?;
             },
-            CameraMode::StaticLocation => ()
+            CameraMode::StaticLocation => 
+            {
+                // selecting texture and texture location
+                canvas.copy(&self.texture, self.texture_location,
+                            // putting player in the center of the screen
+                            Rect::new(self.location.x - camera.get_x(),
+                                      self.location.y - camera.get_y(),
+                                      self.location.width(), self.location.height()))?;
+            }
         }
         Ok(())
     }

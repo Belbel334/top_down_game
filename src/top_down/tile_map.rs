@@ -5,7 +5,7 @@ use sdl2::rect::Rect;
 use std::vec::Vec;
 use std::collections::HashMap;
 
-use crate::camera::Camera;
+use crate::camera::{Camera, CameraMode};
 
 pub enum TileHitBox
 {
@@ -75,9 +75,9 @@ impl TileMap<'_>
                 let tile = self.tiles[y as usize][x as usize];
 
                 canvas.copy(&self.tile_mode[&tile].texture,
-                            Some(self.tile_mode[&tile].get_texture_location()),
-                            Some(Rect::new((x * self.tile_size) as i32 - camera.get_x(), (y * self.tile_size) as i32 - camera.get_y(),
-                            self.tile_size, self.tile_size)))?;
+                            self.tile_mode[&tile].get_texture_location(),
+                            Rect::new((x * self.tile_size) as i32 - camera.get_x(), (y * self.tile_size) as i32 - camera.get_y(),
+                            self.tile_size, self.tile_size))?;
             }
         }
         Ok(())

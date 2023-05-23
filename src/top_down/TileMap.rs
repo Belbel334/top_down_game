@@ -1,10 +1,11 @@
 use sdl2::render::{Texture, Canvas};
 use sdl2::video::Window;
 use sdl2::rect::Rect;
-use sdl2::keyboard::Keycode;
 
 use std::vec::Vec;
 use std::collections::HashMap;
+
+use crate::Camera::Camera;
 
 pub enum TileHitBox
 {

@@ -3,8 +3,8 @@ use sdl2::video::Window;
 use sdl2::rect::Rect;
 use sdl2::keyboard::Keycode;
 
-use crate::Camera::Camera;
-use crate::TileMap::TileMap;
+use crate::Camera::{Camera, CameraMode};
+use crate::TileMap::{TileMap, TileHitBox};
 
 pub struct Player<'a> 
 {
@@ -37,7 +37,7 @@ impl Player<'_>
 
     pub fn draw(&self, camera: &Camera, screen_width: u32, screen_heigt: u32, canvas: &mut Canvas<Window>) -> Result<(), String>
     {
-        match camera.camera_mode
+        match camera.get_camera_mode()
         {
             CameraMode::FollowPlayer =>
             {

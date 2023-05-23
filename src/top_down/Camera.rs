@@ -41,4 +41,9 @@ impl Camera {
             CameraMode::StaticLocation => ()
         }
     }
+
+    pub fn get_camera_mode(&self) -> &CameraMode
+    {
+        &self.camera_mode
+    }
 }

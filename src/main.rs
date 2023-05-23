@@ -112,6 +112,7 @@ fn main() -> Result<(), String> {
         // drawing to the screen
         canvas.present();
 
+        // calculate frame delay
         time_elapsed = Instant::now() - loop_instant;
         if time_elapsed.as_millis() < frame_delay {
             std::thread::sleep( Duration::from_millis( ( frame_delay - time_elapsed.as_millis() ) as u64 ) );

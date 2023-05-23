@@ -13,7 +13,7 @@ pub struct Player<'a>
     location: Rect,
     texture_location: Rect,
     texture: &'a Texture<'a>,
-    
+    // movement variables
     is_moving: bool,
     moving_to: Rect,
 }
@@ -29,7 +29,7 @@ impl Player<'_>
             location,
             texture_location,
             texture,
-
+            // movement variables
             is_moving: false,
             moving_to: location,
         }
@@ -41,6 +41,7 @@ impl Player<'_>
         {
             CameraMode::FollowPlayer =>
             {
+                // copying player to the canvas
                 canvas.copy(&self.texture, Some(self.texture_location),
                 Some(Rect::new((screen_width/2-self.location.width()/2) as i32,
                 (screen_heigt/2-self.location.height()/2) as i32, 
@@ -53,42 +54,34 @@ impl Player<'_>
 
     pub fn get_input(&mut self, tile_map: &TileMap, keycode: Keycode, up_key: Keycode, down_key: Keycode, right_key: Keycode, left_key: Keycode)
     {
-        match keycode
+        if !self.is_moving
         {
-            key if key == up_key =>
+            match keycode
             {
-                if !self.is_moving
+                key if key == up_key =>
                 {
                     self.moving_to.y -= self.tile_size as i32;
                     self.is_moving = true;
-                }
-            },
-            key if key == down_key =>
-            {
-                if !self.is_moving
+                },
+                key if key == down_key =>
                 {
                     self.moving_to.y += self.tile_size as i32;
                     self.is_moving = true;
-                }
-            },
-            key if key == right_key =>
-            {
-                if !self.is_moving
+                },
+                key if key == right_key =>
                 {
                     self.moving_to.x += self.tile_size as i32;
                     self.is_moving = true;
-                }
-            },
-            key if key == left_key =>
-            {
-                if !self.is_moving
+                },
+                key if key == left_key =>
                 {
                     self.moving_to.x -= self.tile_size as i32;
                     self.is_moving = true;
-                }
-            },
-            _ => ()
+                },
+                _ => ()
+            }
         }
+        // returning moveto location to player if wanting to move in a tile
         match tile_map.get_tile(self.moving_to.x as u32 / self.tile_size, self.moving_to.y as u32 / self.tile_size).get_hitbox()
         {
             TileHitBox::Full =>
@@ -101,11 +94,14 @@ impl Player<'_>
 
     pub fn move_player(&mut self)
     {
+        // checking if at the right location
         if self.location.x == self.moving_to.x && self.location.y == self.moving_to.y
         {
             self.is_moving = false;
             return;
         }
+
+        // moving x to the right location
         if self.location.x > self.moving_to.x
         {
             self.location.x -= self.speed;
@@ -113,6 +109,8 @@ impl Player<'_>
         else if self.location.x < self.moving_to.x {
             self.location.x += self.speed;
         }
+
+        // moving y to the right location
         if self.location.y > self.moving_to.y
         {
             self.location.y -= self.speed;

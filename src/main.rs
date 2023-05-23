@@ -1,5 +1,5 @@
 // ToDo:
-// - more comments
+// - 
 
 extern crate sdl2;
 

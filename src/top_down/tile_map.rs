@@ -35,7 +35,7 @@ impl Tile<'_>
     pub fn get_texture_location(&self) -> Rect
     {
         self.texture_location
-        }
+    }
 
     pub fn get_hitbox(&self) -> &TileHitBox
     {

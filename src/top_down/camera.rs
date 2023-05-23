@@ -33,8 +33,10 @@ impl Camera {
         {
             CameraMode::FollowPlayer =>
             {
+                // getting player location
                 let player_location = player.get_location();
                 
+                // moving camera to player
                 self.x = player_location.x - screen_width as i32 / 2 + player_location.width() as i32 / 2;
                 self.y = player_location.y - screen_heigt as i32 / 2 + player_location.height() as i32 / 2;
             }

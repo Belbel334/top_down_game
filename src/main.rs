@@ -1,3 +1,8 @@
+// ToDo:
+// - player collision
+// - fixed fps 
+// - better file organization
+
 extern crate sdl2;
 
 use sdl2::event::Event;
@@ -61,7 +66,7 @@ fn main() -> Result<(), String> {
 
     let mut camera = top_down::Camera::new(top_down::CameraMode::FollowPlayer, 64, 64);
 
-    let mut player = top_down::Player::new(tile_size, 2, Rect::new(256, 256, 64, 64), Rect::new(0, 0, 32, 32), &texture);
+    let mut player = top_down::Player::new(tile_size, 1, Rect::new(256, 256, 64, 64), Rect::new(0, 0, 32, 32), &texture);
 
     let tile_map = top_down::TileMap::new(tiles, tile_mode, 13, 9, tile_size);
 

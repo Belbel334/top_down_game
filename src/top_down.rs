@@ -1,5 +1,3 @@
-// ToDo:
-// - smooth player movement
 
 use sdl2::render::{Texture, Canvas};
 use sdl2::video::Window;
@@ -54,20 +52,19 @@ impl Camera {
 
 pub struct Player<'a> 
 {
-    speed: u32,
+    speed: i32,
     tile_size: u32,
     location: Rect,
     texture_location: Rect,
     texture: &'a Texture<'a>,
     
     is_moving: bool,
-    has_moved: u32,
-    direction: u8,
+    moving_to: Rect,
 }
 
 impl Player<'_>
 {
-    pub fn new<'a>(tile_size: u32, speed: u32, location: Rect, texture_location: Rect, texture: &'a Texture<'a>) -> Player
+    pub fn new<'a>(tile_size: u32, speed: i32, location: Rect, texture_location: Rect, texture: &'a Texture<'a>) -> Player
     {
         Player
         {
@@ -78,8 +75,7 @@ impl Player<'_>
             texture,
 
             is_moving: false,
-            has_moved: 0, // amount of pixels moved
-            direction: 0, // 0: no movement, 1: up, 2: right, 3: down, 4: left
+            moving_to: location,
         }
     }
 
@@ -107,7 +103,7 @@ impl Player<'_>
             {
                 if !self.is_moving
                 {
-                    self.direction = 1;
+                    self.moving_to.y -= self.tile_size as i32;
                     self.is_moving = true;
                 }
             },
@@ -115,7 +111,9 @@ impl Player<'_>
             {
                 if !self.is_moving
                 {
-                    self.direction = 3;
+                    self.moving_to = Rect::new(self.location.x,
+                                               self.location.y + self.tile_size as i32,
+                                               self.location.width(), self.location.height());
                     self.is_moving = true;
                 }
             },
@@ -123,7 +121,9 @@ impl Player<'_>
             {
                 if !self.is_moving
                 {
-                    self.direction = 2;
+                    self.moving_to = Rect::new(self.location.x + self.tile_size as i32,
+                                               self.location.y,
+                                               self.location.width(), self.location.height());
                     self.is_moving = true;
                 }
             },
@@ -131,7 +131,9 @@ impl Player<'_>
             {
                 if !self.is_moving
                 {
-                    self.direction = 4;
+                    self.moving_to = Rect::new(self.location.x - self.tile_size as i32,
+                                               self.location.y,
+                                               self.location.width(), self.location.height());
                     self.is_moving = true;
                 }
             },
@@ -141,115 +143,24 @@ impl Player<'_>
 
     pub fn move_player(&mut self, tile_map: &TileMap)
     {
-        println!("{}, {}", self.location.x as u32 / self.tile_size, self.location.y as u32 / self.tile_size);
-        match tile_map.get_tile( self.location.x as u32 / self.tile_size, self.location.y as u32 / self.tile_size ).get_hitbox()
+        if self.location.x == self.moving_to.x && self.location.y == self.moving_to.y
         {
-                    &TileHitBox::Full => 
-                    {
-                        println!("FULL");
-                    },
-                    _ => (),
+            self.is_moving = false;
+            return;
         }
-
-        match self.direction
+        if self.location.x > self.moving_to.x
         {
-            1 =>
-            {
-                self.location.y -= self.speed as i32; 
-                self.has_moved += self.speed; 
-
-                match tile_map.get_tile( self.location.x as u32 / self.tile_size, self.location.y as u32 / self.tile_size ).get_hitbox()
-                {
-                    &TileHitBox::Full => 
-                    {
-                        self.direction = 0;
-                        self.has_moved = 0;
-                        self.is_moving = false;
-                        self.location.y += self.speed as i32; 
-                    },
-                    _ => (),
-                }
-                
-                if self.has_moved >= self.tile_size
-                {
-                    self.direction = 0;
-                    self.has_moved = 0;
-                        self.is_moving = false;
-                }
-            },
-            2 =>
-            {
-                self.location.x += self.speed as i32; 
-                self.has_moved += self.speed; 
-
-                match tile_map.get_tile(self.location.x as u32 / self.tile_size + 1, self.location.y as u32 / self.tile_size).get_hitbox()
-                {
-                    &TileHitBox::Full => 
-                    {
-                        self.direction = 0;
-                        self.is_moving = false;
-                        self.location.x -= self.speed as i32; 
-                        self.has_moved = 0;
-                    },
-                    _ => (),
-                }
-                
-                if self.has_moved >= self.tile_size
-                {
-                    self.direction = 0;
-                    self.has_moved = 0;
-                        self.is_moving = false;
-                }
-            },
-            3 =>
-            {
-                self.location.y += self.speed as i32; 
-                self.has_moved += self.speed; 
-
-                match tile_map.get_tile(self.location.x as u32 / self.tile_size, self.location.y as u32 / self.tile_size + 1).get_hitbox()
-                {
-                    &TileHitBox::Full => 
-                    {
-                        self.direction = 0;
-                        self.is_moving = false;
-                        self.location.y -= self.speed as i32; 
-                        self.has_moved = 0;
-                    },
-                    _ => (),
-                }
-                
-                if self.has_moved >= self.tile_size
-                {
-                    self.direction = 0;
-                    self.has_moved = 0;
-                        self.is_moving = false;
-                }
-            },
-            4 =>
-            {
-                self.location.x -= self.speed as i32; 
-                self.has_moved += self.speed; 
-
-                match tile_map.get_tile(self.location.x as u32 / self.tile_size, self.location.y as u32 / self.tile_size).get_hitbox()
-                {
-                    &TileHitBox::Full => 
-                    {
-                        self.direction = 0;
-                        self.is_moving = false;
-                        self.location.x += self.speed as i32; 
-                        self.has_moved = 0;
-                    },
-                    _ => (),
-                }
-                
-                if self.has_moved >= self.tile_size
-                {
-                    self.direction = 0;
-                        self.is_moving = false;
-                    self.has_moved = 0;
-                }
-                },
-            _ => ()
+            self.location.x -= self.speed;
+        }
+        else if self.location.x < self.moving_to.x {
+            self.location.x += self.speed;
+        }
+        if self.location.y > self.moving_to.y
+        {
+            self.location.y -= self.speed;
+        }
+        else if self.location.y < self.moving_to.y {
+            self.location.y += self.speed;
         }
     }
 

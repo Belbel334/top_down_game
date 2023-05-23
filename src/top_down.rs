@@ -94,7 +94,7 @@ impl Player<'_>
         Ok(())
     }
 
-    pub fn get_input(&mut self, keycode: Keycode, up_key: Keycode, down_key: Keycode, right_key: Keycode, left_key: Keycode)
+    pub fn get_input(&mut self, tile_map: &TileMap, keycode: Keycode, up_key: Keycode, down_key: Keycode, right_key: Keycode, left_key: Keycode)
     {
         match keycode
         {
@@ -131,6 +131,14 @@ impl Player<'_>
                 }
             },
             _ => ()
+        }
+        match tile_map.get_tile(self.moving_to.x as u32 / self.tile_size, self.moving_to.y as u32 / self.tile_size).get_hitbox()
+        {
+            TileHitBox::Full =>
+            {
+                self.moving_to = self.location;
+            },
+            _ => (),
         }
     }
 

@@ -1,5 +1,4 @@
 // ToDo:
-// - player collision
 // - better file organization
 
 extern crate sdl2;
@@ -87,7 +86,7 @@ fn main() -> Result<(), String> {
                 Event::Quit { .. } => break 'mainloop,
                 Event::KeyDown { keycode: Some(keycode), .. } => {
                     // player movement
-                    player.get_input(keycode, Keycode::Up, Keycode::Down, Keycode::Right, Keycode::Left);
+                    player.get_input(&tile_map, keycode, Keycode::Up, Keycode::Down, Keycode::Right, Keycode::Left);
                 }
                 _ => {}
             }

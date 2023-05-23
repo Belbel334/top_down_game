@@ -1,4 +1,3 @@
-use sdl2::libc::LOCK_SH;
 use sdl2::render::{Texture, Canvas};
 use sdl2::video::Window;
 use sdl2::rect::Rect;

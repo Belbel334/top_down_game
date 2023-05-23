@@ -5,7 +5,7 @@ use sdl2::rect::Rect;
 use std::vec::Vec;
 use std::collections::HashMap;
 
-use crate::camera::{Camera, CameraMode};
+use crate::camera::Camera;
 
 pub enum TileHitBox
 {

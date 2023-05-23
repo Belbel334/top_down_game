@@ -1,4 +1,3 @@
-
 use sdl2::render::{Texture, Canvas};
 use sdl2::video::Window;
 use sdl2::rect::Rect;
@@ -111,9 +110,7 @@ impl Player<'_>
             {
                 if !self.is_moving
                 {
-                    self.moving_to = Rect::new(self.location.x,
-                                               self.location.y + self.tile_size as i32,
-                                               self.location.width(), self.location.height());
+                    self.moving_to.y += self.tile_size as i32;
                     self.is_moving = true;
                 }
             },
@@ -121,9 +118,7 @@ impl Player<'_>
             {
                 if !self.is_moving
                 {
-                    self.moving_to = Rect::new(self.location.x + self.tile_size as i32,
-                                               self.location.y,
-                                               self.location.width(), self.location.height());
+                    self.moving_to.x += self.tile_size as i32;
                     self.is_moving = true;
                 }
             },
@@ -131,9 +126,7 @@ impl Player<'_>
             {
                 if !self.is_moving
                 {
-                    self.moving_to = Rect::new(self.location.x - self.tile_size as i32,
-                                               self.location.y,
-                                               self.location.width(), self.location.height());
+                    self.moving_to.x -= self.tile_size as i32;
                     self.is_moving = true;
                 }
             },
@@ -141,7 +134,7 @@ impl Player<'_>
         }
     }
 
-    pub fn move_player(&mut self, tile_map: &TileMap)
+    pub fn move_player(&mut self)
     {
         if self.location.x == self.moving_to.x && self.location.y == self.moving_to.y
         {

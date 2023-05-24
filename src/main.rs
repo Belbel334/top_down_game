@@ -53,8 +53,8 @@ fn main() -> Result<(), String> {
     // variables for the game
     let texture_creator = canvas.texture_creator();
 
-    let texture = texture_creator.load_texture(Path::new("textures.png"))?;
-    let player_texture = texture_creator.load_texture(Path::new("player.png"))?;
+    let ground_texture = texture_creator.load_texture(Path::new("res/ground.png"))?;
+        let player_texture = texture_creator.load_texture(Path::new("res/player.png"))?;
 
     let tiles = vec![
                           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -68,8 +68,8 @@ fn main() -> Result<(), String> {
                           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ];
 
-    let tile_mode = HashMap::from([(0, tile_map::Tile::new(tile_map::TileHitBox::None, Rect::new(32, 0, 32, 32), &texture)),
-                                   (1, tile_map::Tile::new(tile_map::TileHitBox::Full, Rect::new(0, 32, 32, 32), &texture))]);
+    let tile_mode = HashMap::from([(0, tile_map::Tile::new(tile_map::TileHitBox::None, Rect::new(32, 0, 32, 32), &ground_texture)),
+                                   (1, tile_map::Tile::new(tile_map::TileHitBox::Full, Rect::new(0, 0, 32, 32), &ground_texture))]);
 
     let mut camera = camera::Camera::new(camera::CameraMode::FollowPlayer, 0, 0);
 

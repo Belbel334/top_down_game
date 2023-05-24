@@ -9,7 +9,6 @@ use sdl2::image::{InitFlag, LoadTexture};
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
 
-use std::vec::Vec;
 use std::path::Path;
 use std::collections::HashMap;
 use std::time::{Instant, Duration};
@@ -55,17 +54,17 @@ fn main() -> Result<(), String> {
 
     let texture = texture_creator.load_texture(Path::new("textures.png"))?;
 
-    let tiles = Vec::from([
-                          Vec::from([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]),
-                          Vec::from([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]),
-                          Vec::from([1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]),
-                          Vec::from([1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1]),
-                          Vec::from([1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1]),
-                          Vec::from([1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1]),
-                          Vec::from([1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]),
-                          Vec::from([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]),
-                          Vec::from([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]),
-    ]);
+    let tiles = vec![
+                          vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                          vec![1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                          vec![1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+                          vec![1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1],
+                          vec![1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1],
+                          vec![1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1],
+                          vec![1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+                          vec![1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                          vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    ];
 
     let tile_mode = HashMap::from([(0, tile_map::Tile::new(tile_map::TileHitBox::None, Rect::new(32, 0, 32, 32), &texture)),
                                    (1, tile_map::Tile::new(tile_map::TileHitBox::Full, Rect::new(0, 32, 32, 32), &texture))]);

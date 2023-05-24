@@ -1,5 +1,5 @@
 // ToDo:
-// - animaion
+// - animation
 // - directional spites
 
 extern crate sdl2;

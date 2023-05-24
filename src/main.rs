@@ -1,5 +1,6 @@
 // ToDo:
-// - 
+// - animaion
+// - directional spites
 
 extern crate sdl2;
 
@@ -53,6 +54,7 @@ fn main() -> Result<(), String> {
     let texture_creator = canvas.texture_creator();
 
     let texture = texture_creator.load_texture(Path::new("textures.png"))?;
+    let player_texture = texture_creator.load_texture(Path::new("player.png"))?;
 
     let tiles = vec![
                           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -71,7 +73,7 @@ fn main() -> Result<(), String> {
 
     let mut camera = camera::Camera::new(camera::CameraMode::FollowPlayer, 0, 0);
 
-    let mut player = player::Player::new(tile_size, 4, Rect::new(256, 256, 64, 64), Rect::new(0, 0, 32, 32), &texture);
+    let mut player = player::Player::new(tile_size, 4, Rect::new(256, 256, 64, 64), Rect::new(0, 0, 32, 32), &player_texture);
 
     let tile_map = tile_map::TileMap::new(tiles, tile_mode, 13, 9, tile_size);
 

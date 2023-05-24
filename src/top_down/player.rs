@@ -6,13 +6,16 @@ use sdl2::keyboard::Keycode;
 use crate::camera::{Camera, CameraMode};
 use crate::tile_map::{TileMap, TileHitBox};
 
+use std::collections::HashMap;
+
 pub struct Player<'a> 
 {
     speed: i32,
     tile_size: u32,
     location: Rect,
-    texture_location: Rect,
     texture: &'a Texture<'a>,
+    texture_locations: HashMap<u32, Rect>,
+    direction: u32,
     // movement variables
     is_moving: bool,
     moving_to: Rect,
@@ -20,15 +23,16 @@ pub struct Player<'a>
 
 impl Player<'_>
 {
-    pub fn new<'a>(tile_size: u32, speed: i32, location: Rect, texture_location: Rect, texture: &'a Texture<'a>) -> Player
+    pub fn new<'a>(tile_size: u32, speed: i32, location: Rect, texture_locations: HashMap<u32, Rect>, texture: &'a Texture<'a>) -> Player
     {
         Player
         {
             speed,
             tile_size,
             location,
-            texture_location,
             texture,
+            texture_locations,
+            direction: 0,
             // movement variables
             is_moving: false,
             moving_to: location,
@@ -42,8 +46,8 @@ impl Player<'_>
             CameraMode::FollowPlayer =>
             {
                 // selecting texture and texture location
-                canvas.copy(&self.texture, self.texture_location,
-                            // putting player in the center of the screen
+                canvas.copy(&self.texture, self.texture_locations[&self.direction],
+                            //putting player in the center of the screen
                             Rect::new(( screen_width / 2 - self.location.width() / 2 ) as i32,
                                       ( screen_heigt / 2 - self.location.height() / 2 ) as i32, 
                                       self.location.width(), self.location.height()))?;
@@ -51,7 +55,7 @@ impl Player<'_>
             CameraMode::StaticLocation => 
             {
                 // selecting texture and texture location
-                canvas.copy(&self.texture, self.texture_location,
+                    canvas.copy(&self.texture, self.texture_locations[&self.direction],
                             // putting player in the center of the screen
                             Rect::new(self.location.x - camera.get_x(),
                                       self.location.y - camera.get_y(),
@@ -71,21 +75,25 @@ impl Player<'_>
                 {
                     self.moving_to.y -= self.tile_size as i32;
                     self.is_moving = true;
+                    self.direction = 1;
                 },
                 key if key == down_key =>
                 {
                     self.moving_to.y += self.tile_size as i32;
                     self.is_moving = true;
+                    self.direction = 3;
                 },
                 key if key == right_key =>
                 {
                     self.moving_to.x += self.tile_size as i32;
                     self.is_moving = true;
+                    self.direction = 2;
                 },
                 key if key == left_key =>
                 {
                     self.moving_to.x -= self.tile_size as i32;
                     self.is_moving = true;
+                    self.direction = 4;
                 },
                 _ => ()
             }

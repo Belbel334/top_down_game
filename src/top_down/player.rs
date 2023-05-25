@@ -1,4 +1,4 @@
-use sdl2::render::{Texture, Canvas};
+use sdl2::render::Canvas;
 use sdl2::video::Window;
 use sdl2::rect::Rect;
 use sdl2::keyboard::Keycode;
@@ -15,7 +15,6 @@ pub struct Player<'a>
     speed: i32,
     tile_size: u32,
     location: Rect,
-    texture: &'a Texture<'a>,
     animations: HashMap<u32, Animation<'a>>,
     direction: u32,
     // movement variables
@@ -25,14 +24,13 @@ pub struct Player<'a>
 
 impl Player<'_>
 {
-    pub fn new<'a>(tile_size: u32, speed: i32, location: Rect, animations: HashMap<u32, Animation<'a>>, texture: &'a Texture<'a>) -> Player<'a>
+    pub fn new<'a>(tile_size: u32, multiplier: u32, speed: i32, location: Rect, animations: HashMap<u32, Animation<'a>>) -> Player<'a>
     {
         Player
         {
             speed,
-            tile_size,
+            tile_size: tile_size * multiplier,
             location,
-            texture,
             animations,
             direction: 3,
             // movement variables

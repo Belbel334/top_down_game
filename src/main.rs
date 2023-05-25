@@ -1,6 +1,5 @@
 // ToDo:
-// - player animation
-// - times for small tilesize 
+// - 
 
 extern crate sdl2;
 
@@ -31,11 +30,12 @@ fn main() -> Result<(), String> {
     let _image_context = sdl2::image::init(InitFlag::PNG | InitFlag::JPG)?;
     
     // defining tile size 
-    let tile_size: u32 = 64;
+    let tile_size: u32 = 32;
+    let multiplier: u32 = 2;
 
     // window size
-    let screen_width: u32 = 13 * tile_size;
-    let screen_height: u32 = 9 * tile_size;
+    let screen_width: u32 = 13 * tile_size * multiplier;
+    let screen_height: u32 = 9 * tile_size * multiplier;
 
     // setting up window
     let window = video_subsystem
@@ -68,45 +68,45 @@ fn main() -> Result<(), String> {
                           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ];
 
-    let tile_mode = HashMap::from([(0, tile_map::Tile::new(tile_map::TileHitBox::None, Rect::new(32, 0, 32, 32), &ground_texture)),
-                                   (1, tile_map::Tile::new(tile_map::TileHitBox::Full, Rect::new(0, 0, 32, 32), &ground_texture))]);
+    let tile_mode = HashMap::from([(0, tile_map::Tile::new(tile_map::TileHitBox::None, Rect::new(32, 0, tile_size, tile_size), &ground_texture)),
+                                   (1, tile_map::Tile::new(tile_map::TileHitBox::Full, Rect::new(0, 0, tile_size, tile_size), &ground_texture))]);
 
     let mut camera = camera::Camera::new(camera::CameraMode::FollowPlayer, 0, 0);
 
     let player_animations = HashMap::from([
         (1, animation::Animation::new(&player_texture, vec![
-                Rect::new(0, 0, 32, 32),
-                Rect::new(32, 0, 32, 32),
-                Rect::new(64, 0, 32, 32),
-                Rect::new(96, 0, 32, 32),
+                Rect::new(0, 0, tile_size, tile_size),
+                Rect::new(32, 0, tile_size, tile_size),
+                Rect::new(64, 0, tile_size, tile_size),
+                Rect::new(96, 0, tile_size, tile_size),
             ],
         4, 15)),
         (2, animation::Animation::new(&player_texture, vec![
-                Rect::new(0, 32, 32, 32),
-                Rect::new(32, 32, 32, 32),
-                Rect::new(64, 32, 32, 32),
-                Rect::new(96, 32, 32, 32),
+                Rect::new(0, 32, tile_size, tile_size),
+                Rect::new(32, 32, tile_size, tile_size),
+                Rect::new(64, 32, tile_size, tile_size),
+                Rect::new(96, 32, tile_size, tile_size),
             ],
         4, 15)),
         (3, animation::Animation::new(&player_texture, vec![
-                Rect::new(0, 64, 32, 32),
-                Rect::new(32, 64, 32, 32),
-                Rect::new(64, 64, 32, 32),
-                Rect::new(96, 64, 32, 32),
+                Rect::new(0, 64, tile_size, tile_size),
+                Rect::new(32, 64, tile_size, tile_size),
+                Rect::new(64, 64, tile_size, tile_size),
+                Rect::new(96, 64, tile_size, tile_size),
             ],
         4, 15)),
         (4, animation::Animation::new(&player_texture, vec![
-                Rect::new(0, 96, 32, 32),
-                Rect::new(32, 96, 32, 32),
-                Rect::new(64, 96, 32, 32),
-                Rect::new(96, 96, 32, 32),
+                Rect::new(0, 96, tile_size, tile_size),
+                Rect::new(32, 96, tile_size, tile_size),
+                Rect::new(64, 96, tile_size, tile_size),
+                Rect::new(96, 96, tile_size, tile_size),
             ],
         4, 15)),
     ]);
 
-    let mut player = player::Player::new(tile_size, 4, Rect::new(256, 256, 64, 64), player_animations, &player_texture);
+    let mut player = player::Player::new(tile_size, multiplier, 4, Rect::new(256, 256, 64, 64), player_animations);
 
-    let tile_map = tile_map::TileMap::new(tiles, tile_mode, 13, 9, tile_size);
+    let tile_map = tile_map::TileMap::new(tiles, tile_mode, 13, 9, tile_size, multiplier);
 
     'mainloop: loop {
         loop_instant = Instant::now();

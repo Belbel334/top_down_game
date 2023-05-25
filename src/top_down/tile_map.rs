@@ -54,7 +54,7 @@ pub struct TileMap<'a>
 
 impl TileMap<'_>
 {
-    pub fn new<'a>( tiles: Vec<Vec<u32>>, tile_mode: HashMap<u32, Tile<'a>>, x_tiles: u32, y_tiles: u32, tile_size: u32) -> TileMap<'a>
+    pub fn new<'a>( tiles: Vec<Vec<u32>>, tile_mode: HashMap<u32, Tile<'a>>, x_tiles: u32, y_tiles: u32, tile_size: u32, multiplier: u32) -> TileMap<'a>
     {
         TileMap
         {
@@ -62,7 +62,7 @@ impl TileMap<'_>
             tile_mode,
             x_tiles,
             y_tiles,
-            tile_size
+            tile_size: tile_size * multiplier
         }
     }
 

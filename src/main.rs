@@ -1,6 +1,6 @@
 // ToDo:
 // - player animation
-// - mulitplier 
+// - times for small tilesize 
 
 extern crate sdl2;
 

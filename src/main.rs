@@ -55,7 +55,6 @@ fn main() -> Result<(), String> {
 
     let ground_texture = texture_creator.load_texture(Path::new("res/ground.png"))?;
     let player_texture = texture_creator.load_texture(Path::new("res/player.png"))?;
-    let hsau = texture_creator.load_texture(Path::new("res/Sprite-0001.png"))?;
 
     let tiles = vec![
                           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -74,25 +73,40 @@ fn main() -> Result<(), String> {
 
     let mut camera = camera::Camera::new(camera::CameraMode::FollowPlayer, 0, 0);
 
-    let player_texture_locations = HashMap::from([
-        (0, Rect::new(0, 0, 32, 32)),
-        (1, Rect::new(32, 0, 32, 32)),
-        (2, Rect::new(0, 32, 32, 32)),
-        (3, Rect::new(0, 0, 32, 32)),
-        (4, Rect::new(32, 32, 32, 32)),
+    let player_animations = HashMap::from([
+        (1, animation::Animation::new(&player_texture, vec![
+                Rect::new(0, 0, 32, 32),
+                Rect::new(32, 0, 32, 32),
+                Rect::new(64, 0, 32, 32),
+                Rect::new(96, 0, 32, 32),
+            ],
+        4, 15)),
+        (2, animation::Animation::new(&player_texture, vec![
+                Rect::new(0, 32, 32, 32),
+                Rect::new(32, 32, 32, 32),
+                Rect::new(64, 32, 32, 32),
+                Rect::new(96, 32, 32, 32),
+            ],
+        4, 15)),
+        (3, animation::Animation::new(&player_texture, vec![
+                Rect::new(0, 64, 32, 32),
+                Rect::new(32, 64, 32, 32),
+                Rect::new(64, 64, 32, 32),
+                Rect::new(96, 64, 32, 32),
+            ],
+        4, 15)),
+        (4, animation::Animation::new(&player_texture, vec![
+                Rect::new(0, 96, 32, 32),
+                Rect::new(32, 96, 32, 32),
+                Rect::new(64, 96, 32, 32),
+                Rect::new(96, 96, 32, 32),
+            ],
+        4, 15)),
     ]);
 
-    let mut player = player::Player::new(tile_size, 4, Rect::new(256, 256, 64, 64), player_texture_locations, &player_texture);
+    let mut player = player::Player::new(tile_size, 4, Rect::new(256, 256, 64, 64), player_animations, &player_texture);
 
     let tile_map = tile_map::TileMap::new(tiles, tile_mode, 13, 9, tile_size);
-
-    let frame_locations = vec![
-        Rect::new(0, 0, 32, 32),
-        Rect::new(32, 0, 32, 32),
-        Rect::new(64, 0, 32, 32),
-    ];
-
-    let mut animation = animation::Animation::new(hsau, frame_locations, 3, 25);
 
     'mainloop: loop {
         loop_instant = Instant::now();
@@ -126,9 +140,6 @@ fn main() -> Result<(), String> {
         // drawing the player
         player.draw(&camera, screen_width, screen_height, &mut canvas)?;
 
-        // animation test
-        animation.draw(&mut canvas, Rect::new(0, 0, tile_size, tile_size))?;
-       
         // drawing to the screen
         canvas.present();
 

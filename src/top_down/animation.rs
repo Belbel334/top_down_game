@@ -4,7 +4,7 @@ use sdl2::rect::Rect;
 
 pub struct Animation<'a>
 {
-    texture: Texture<'a>,
+    texture: &'a Texture<'a>,
     frame_locations: Vec<Rect>,
     length: u32,
     frame_delay: u32, 
@@ -13,7 +13,7 @@ pub struct Animation<'a>
 
 impl Animation<'_>
 {
-    pub fn new<'a>(texture: Texture<'a>, frame_locations: Vec<Rect>, length: u32, frame_delay: u32) -> Animation
+    pub fn new<'a>(texture: &'a Texture<'a>, frame_locations: Vec<Rect>, length: u32, frame_delay: u32) -> Animation
     {
         Animation { texture, frame_locations, length: length - 1, frame_delay, frame: 0 }
     }

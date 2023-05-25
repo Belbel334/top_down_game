@@ -8,13 +8,15 @@ use crate::tile_map::{TileMap, TileHitBox};
 
 use std::collections::HashMap;
 
+use super::animation::Animation;
+
 pub struct Player<'a> 
 {
     speed: i32,
     tile_size: u32,
     location: Rect,
     texture: &'a Texture<'a>,
-    texture_locations: HashMap<u32, Rect>,
+    animations: HashMap<u32, Animation<'a>>,
     direction: u32,
     // movement variables
     is_moving: bool,
@@ -23,7 +25,7 @@ pub struct Player<'a>
 
 impl Player<'_>
 {
-    pub fn new<'a>(tile_size: u32, speed: i32, location: Rect, texture_locations: HashMap<u32, Rect>, texture: &'a Texture<'a>) -> Player
+    pub fn new<'a>(tile_size: u32, speed: i32, location: Rect, animations: HashMap<u32, Animation<'a>>, texture: &'a Texture<'a>) -> Player<'a>
     {
         Player
         {
@@ -31,35 +33,33 @@ impl Player<'_>
             tile_size,
             location,
             texture,
-            texture_locations,
-            direction: 0,
+            animations,
+            direction: 3,
             // movement variables
             is_moving: false,
             moving_to: location,
         }
     }
 
-    pub fn draw(&self, camera: &Camera, screen_width: u32, screen_heigt: u32, canvas: &mut Canvas<Window>) -> Result<(), String>
+    pub fn draw(&mut self, camera: &Camera, screen_width: u32, screen_heigt: u32, canvas: &mut Canvas<Window>) -> Result<(), String>
     {
         match camera.get_camera_mode()
         {
             CameraMode::FollowPlayer =>
             {
-                // selecting texture and texture location
-                canvas.copy(&self.texture, self.texture_locations[&self.direction],
-                            //putting player in the center of the screen
+                self.animations.get_mut(&self.direction).map(|val| val.draw(canvas,
+                            // putting player in the center of the screen
                             Rect::new(( screen_width / 2 - self.location.width() / 2 ) as i32,
                                       ( screen_heigt / 2 - self.location.height() / 2 ) as i32, 
-                                      self.location.width(), self.location.height()))?;
+                                      self.location.width(), self.location.height())));
             },
             CameraMode::StaticLocation => 
             {
-                // selecting texture and texture location
-                    canvas.copy(&self.texture, self.texture_locations[&self.direction],
-                            // putting player in the center of the screen
+                self.animations.get_mut(&self.direction).map(|val| val.draw(canvas,
+                            // drawing the player according to the camera
                             Rect::new(self.location.x - camera.get_x(),
                                       self.location.y - camera.get_y(),
-                                      self.location.width(), self.location.height()))?;
+                                      self.location.width(), self.location.height())));
             }
         }
         Ok(())

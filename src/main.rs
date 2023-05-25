@@ -1,5 +1,6 @@
 // ToDo:
-// - animation
+// - player animation
+// - mulitplier 
 
 extern crate sdl2;
 
@@ -13,7 +14,7 @@ use std::path::Path;
 use std::collections::HashMap;
 use std::time::{Instant, Duration};
 
-use crate::top_down::{player, tile_map, camera};
+use crate::top_down::{player, tile_map, camera, animation};
 pub mod top_down;
 
 fn main() -> Result<(), String> {
@@ -53,7 +54,8 @@ fn main() -> Result<(), String> {
     let texture_creator = canvas.texture_creator();
 
     let ground_texture = texture_creator.load_texture(Path::new("res/ground.png"))?;
-        let player_texture = texture_creator.load_texture(Path::new("res/player.png"))?;
+    let player_texture = texture_creator.load_texture(Path::new("res/player.png"))?;
+    let hsau = texture_creator.load_texture(Path::new("res/Sprite-0001.png"))?;
 
     let tiles = vec![
                           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -83,6 +85,14 @@ fn main() -> Result<(), String> {
     let mut player = player::Player::new(tile_size, 4, Rect::new(256, 256, 64, 64), player_texture_locations, &player_texture);
 
     let tile_map = tile_map::TileMap::new(tiles, tile_mode, 13, 9, tile_size);
+
+    let frame_locations = vec![
+        Rect::new(0, 0, 32, 32),
+        Rect::new(32, 0, 32, 32),
+        Rect::new(64, 0, 32, 32),
+    ];
+
+    let mut animation = animation::Animation::new(hsau, frame_locations, 3, 25);
 
     'mainloop: loop {
         loop_instant = Instant::now();
@@ -116,6 +126,9 @@ fn main() -> Result<(), String> {
         // drawing the player
         player.draw(&camera, screen_width, screen_height, &mut canvas)?;
 
+        // animation test
+        animation.draw(&mut canvas, Rect::new(0, 0, tile_size, tile_size))?;
+       
         // drawing to the screen
         canvas.present();
 

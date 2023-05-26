@@ -6,8 +6,8 @@ extern crate sdl2;
 use sdl2::event::Event;
 use sdl2::rect::Rect;
 use sdl2::image::{InitFlag, LoadTexture};
-use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
+use sdl2::keyboard::Scancode;
 
 use std::path::Path;
 use std::collections::HashMap;
@@ -50,6 +50,8 @@ fn main() -> Result<(), String> {
         .build()
         .map_err(|e| e.to_string())?;
 
+    let mut events = sdl_context.event_pump()?;
+
     // variables for the game
     let texture_creator = canvas.texture_creator();
 
@@ -84,21 +86,22 @@ fn main() -> Result<(), String> {
 
     let tile_map = tile_map::TileMap::new(tiles, tile_mode, 13, 9, tile_size, multiplier);
 
+    let mut keyboard_state;
+
     'mainloop: loop {
         loop_instant = Instant::now();
 
-        for event in sdl_context.event_pump()?.poll_iter() {
+        for event in events.poll_iter() {
 
             match event {
                 // quiting window
                 Event::Quit { .. } => break 'mainloop,
-                Event::KeyDown { keycode: Some(keycode), .. } => {
-                    // player movement
-                    player.get_input(&tile_map, keycode, Keycode::Up, Keycode::Down, Keycode::Right, Keycode::Left);
-                }
                 _ => {}
             }
         }
+        
+        keyboard_state = events.keyboard_state();
+        player.get_input(&tile_map, keyboard_state, Scancode::Up, Scancode::Down, Scancode::Right, Scancode::Left);
 
         // moving the player
         player.move_player();

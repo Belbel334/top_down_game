@@ -1,7 +1,7 @@
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 use sdl2::rect::Rect;
-use sdl2::keyboard::Keycode;
+use sdl2::keyboard::{Scancode, KeyboardState};
 
 use crate::camera::{Camera, CameraMode};
 use crate::tile_map::{TileMap, TileHitBox};
@@ -63,37 +63,33 @@ impl Player<'_>
         Ok(())
     }
 
-    pub fn get_input(&mut self, tile_map: &TileMap, keycode: Keycode, up_key: Keycode, down_key: Keycode, right_key: Keycode, left_key: Keycode)
+    pub fn get_input(&mut self, tile_map: &TileMap, event: KeyboardState, up_key: Scancode, down_key: Scancode, right_key: Scancode, left_key: Scancode)
     {
         if !self.is_moving
         {
-            match keycode
+            if event.is_scancode_pressed(up_key)
             {
-                key if key == up_key =>
-                {
-                    self.moving_to.y -= self.tile_size as i32;
-                    self.is_moving = true;
-                    self.direction = 1;
-                },
-                key if key == down_key =>
-                {
-                    self.moving_to.y += self.tile_size as i32;
-                    self.is_moving = true;
-                    self.direction = 3;
-                },
-                key if key == right_key =>
-                {
-                    self.moving_to.x += self.tile_size as i32;
-                    self.is_moving = true;
-                    self.direction = 2;
-                },
-                key if key == left_key =>
-                {
-                    self.moving_to.x -= self.tile_size as i32;
-                    self.is_moving = true;
-                    self.direction = 4;
-                },
-                _ => ()
+                self.moving_to.y -= self.tile_size as i32;
+                self.is_moving = true;
+                self.direction = 1;
+            }
+            else if event.is_scancode_pressed(down_key)
+            {
+                self.moving_to.y += self.tile_size as i32;
+                self.is_moving = true;
+                self.direction = 3;
+            }
+            else if event.is_scancode_pressed(right_key)
+            {
+                self.moving_to.x += self.tile_size as i32;
+                self.is_moving = true;
+                self.direction = 2;
+            }
+            else if event.is_scancode_pressed(left_key)
+            {
+                self.moving_to.x -= self.tile_size as i32;
+                self.is_moving = true;
+                self.direction = 4;
             }
         }
         // returning moveto location to player if wanting to move in a tile

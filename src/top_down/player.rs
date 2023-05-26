@@ -15,7 +15,8 @@ pub struct Player<'a>
     speed: i32,
     tile_size: u32,
     location: Rect,
-    animations: HashMap<u32, Animation<'a>>,
+    idle_animations: HashMap<u32, Animation<'a>>,
+    run_animations: HashMap<u32, Animation<'a>>,
     direction: u32,
     // movement variables
     is_moving: bool,
@@ -24,14 +25,15 @@ pub struct Player<'a>
 
 impl Player<'_>
 {
-    pub fn new<'a>(tile_size: u32, multiplier: u32, speed: i32, location: Rect, animations: HashMap<u32, Animation<'a>>) -> Player<'a>
+    pub fn new<'a>(tile_size: u32, multiplier: u32, speed: i32, location: Rect, idle_animations: HashMap<u32, Animation<'a>>, run_animations: HashMap<u32, Animation<'a>>) -> Player<'a>
     {
         Player
         {
             speed,
             tile_size: tile_size * multiplier,
             location,
-            animations,
+            idle_animations,
+            run_animations,
             direction: 3,
             // movement variables
             is_moving: false,
@@ -45,19 +47,45 @@ impl Player<'_>
         {
             CameraMode::FollowPlayer =>
             {
-                self.animations.get_mut(&self.direction).map(|val| val.draw(canvas,
-                            // putting player in the center of the screen
-                            Rect::new(( screen_width / 2 - self.location.width() / 2 ) as i32,
-                                      ( screen_heigt / 2 - self.location.height() / 2 ) as i32, 
-                                      self.location.width(), self.location.height())));
+                match self.is_moving {
+                    true =>
+                    {
+                        self.run_animations.get_mut(&self.direction).map(|val| val.draw(canvas,
+                                    // putting player in the center of the screen
+                                    Rect::new(( screen_width / 2 - self.location.width() / 2 ) as i32,
+                                              ( screen_heigt / 2 - self.location.height() / 2 ) as i32, 
+                                              self.location.width(), self.location.height())));
+                    },
+                    false =>
+                    {
+                        self.idle_animations.get_mut(&self.direction).map(|val| val.draw(canvas,
+                                    // putting player in the center of the screen
+                                    Rect::new(( screen_width / 2 - self.location.width() / 2 ) as i32,
+                                              ( screen_heigt / 2 - self.location.height() / 2 ) as i32, 
+                                              self.location.width(), self.location.height())));
+                    },
+                }
             },
             CameraMode::StaticLocation => 
             {
-                self.animations.get_mut(&self.direction).map(|val| val.draw(canvas,
-                            // drawing the player according to the camera
-                            Rect::new(self.location.x - camera.get_x(),
-                                      self.location.y - camera.get_y(),
-                                      self.location.width(), self.location.height())));
+                match self.is_moving {
+                    true =>
+                    {
+                        self.run_animations.get_mut(&self.direction).map(|val| val.draw(canvas,
+                                    // drawing the player according to the camera
+                                    Rect::new(self.location.x - camera.get_x(),
+                                             self.location.y - camera.get_y(),
+                                             self.location.width(), self.location.height())));
+                    },
+                    false =>
+                    {
+                        self.idle_animations.get_mut(&self.direction).map(|val| val.draw(canvas,
+                                    // drawing the player according to the camera
+                                    Rect::new(self.location.x - camera.get_x(),
+                                             self.location.y - camera.get_y(),
+                                             self.location.width(), self.location.height())));
+                    },
+                }
             }
         }
         Ok(())

@@ -1,5 +1,5 @@
 // ToDo:
-// - running animation 
+// - :Q
 
 extern crate sdl2;
 
@@ -56,7 +56,6 @@ fn main() -> Result<(), String> {
     let texture_creator = canvas.texture_creator();
 
     let ground_texture = texture_creator.load_texture(Path::new("res/ground.png"))?;
-    let player_texture = texture_creator.load_texture(Path::new("res/player.png"))?;
 
     let tiles = vec![
                           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -75,14 +74,25 @@ fn main() -> Result<(), String> {
 
     let mut camera = camera::Camera::new(camera::CameraMode::FollowPlayer, 0, 0);
 
-    let player_animations = HashMap::from([
-        (1, animation::Animation::new(&player_texture, 0, 0, tile_size, 4, 10)),
-        (2, animation::Animation::new(&player_texture, 0, 32, tile_size, 4, 10)),
-        (3, animation::Animation::new(&player_texture, 0, 64, tile_size, 4, 10)),
-        (4, animation::Animation::new(&player_texture, 0, 96, tile_size, 4, 10)),
+    let player_idle_texture = texture_creator.load_texture(Path::new("res/player_idle.png"))?;
+
+    let player_run_texture = texture_creator.load_texture(Path::new("res/player_run.png"))?;
+
+    let player_idle_animations = HashMap::from([
+        (1, animation::Animation::new(&player_idle_texture, 0, 0, tile_size, 4, 10)),
+        (2, animation::Animation::new(&player_idle_texture, 0, 32, tile_size, 4, 10)),
+        (3, animation::Animation::new(&player_idle_texture, 0, 64, tile_size, 4, 10)),
+        (4, animation::Animation::new(&player_idle_texture, 0, 96, tile_size, 4, 10)),
     ]);
 
-    let mut player = player::Player::new(tile_size, multiplier, 4, Rect::new(256, 256, 64, 64), player_animations);
+    let player_run_animations = HashMap::from([
+        (1, animation::Animation::new(&player_run_texture, 0, 0, tile_size, 4, 5)),
+        (2, animation::Animation::new(&player_run_texture, 0, 32, tile_size, 4, 5)),
+        (3, animation::Animation::new(&player_run_texture, 0, 64, tile_size, 4, 5)),
+        (4, animation::Animation::new(&player_run_texture, 0, 96, tile_size, 4, 5)),
+    ]);
+
+    let mut player = player::Player::new(tile_size, multiplier, 4, Rect::new(256, 256, 64, 64), player_idle_animations, player_run_animations);
 
     let tile_map = tile_map::TileMap::new(tiles, tile_mode, 13, 9, tile_size, multiplier);
 

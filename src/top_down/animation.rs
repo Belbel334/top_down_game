@@ -13,8 +13,16 @@ pub struct Animation<'a>
 
 impl Animation<'_>
 {
-    pub fn new<'a>(texture: &'a Texture<'a>, frame_locations: Vec<Rect>, length: u32, frame_delay: u32) -> Animation
+    pub fn new<'a>(texture: &'a Texture<'a>, first_frame_x: i32, first_frame_y: i32, tile_size: u32, length: u32, frame_delay: u32) -> Animation
     {
+        let mut frame_locations: Vec<Rect> = vec![];
+        for frame in 0..length 
+        {
+            frame_locations.push(Rect::new(( tile_size * frame ) as i32 + first_frame_x,
+                                           first_frame_y,
+                                           tile_size,
+                                           tile_size));
+        }
         Animation { texture, frame_locations, length: length - 1, frame_delay, frame: 0 }
     }
 

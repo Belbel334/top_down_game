@@ -1,5 +1,5 @@
 // ToDo:
-// - 
+// - running animation 
 
 extern crate sdl2;
 
@@ -74,34 +74,10 @@ fn main() -> Result<(), String> {
     let mut camera = camera::Camera::new(camera::CameraMode::FollowPlayer, 0, 0);
 
     let player_animations = HashMap::from([
-        (1, animation::Animation::new(&player_texture, vec![
-                Rect::new(0, 0, tile_size, tile_size),
-                Rect::new(32, 0, tile_size, tile_size),
-                Rect::new(64, 0, tile_size, tile_size),
-                Rect::new(96, 0, tile_size, tile_size),
-            ],
-        4, 15)),
-        (2, animation::Animation::new(&player_texture, vec![
-                Rect::new(0, 32, tile_size, tile_size),
-                Rect::new(32, 32, tile_size, tile_size),
-                Rect::new(64, 32, tile_size, tile_size),
-                Rect::new(96, 32, tile_size, tile_size),
-            ],
-        4, 15)),
-        (3, animation::Animation::new(&player_texture, vec![
-                Rect::new(0, 64, tile_size, tile_size),
-                Rect::new(32, 64, tile_size, tile_size),
-                Rect::new(64, 64, tile_size, tile_size),
-                Rect::new(96, 64, tile_size, tile_size),
-            ],
-        4, 15)),
-        (4, animation::Animation::new(&player_texture, vec![
-                Rect::new(0, 96, tile_size, tile_size),
-                Rect::new(32, 96, tile_size, tile_size),
-                Rect::new(64, 96, tile_size, tile_size),
-                Rect::new(96, 96, tile_size, tile_size),
-            ],
-        4, 15)),
+        (1, animation::Animation::new(&player_texture, 0, 0, tile_size, 4, 10)),
+        (2, animation::Animation::new(&player_texture, 0, 32, tile_size, 4, 10)),
+        (3, animation::Animation::new(&player_texture, 0, 64, tile_size, 4, 10)),
+        (4, animation::Animation::new(&player_texture, 0, 96, tile_size, 4, 10)),
     ]);
 
     let mut player = player::Player::new(tile_size, multiplier, 4, Rect::new(256, 256, 64, 64), player_animations);

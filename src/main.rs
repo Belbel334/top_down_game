@@ -79,10 +79,10 @@ fn main() -> Result<(), String> {
     let player_run_texture = texture_creator.load_texture(Path::new("res/player_run.png"))?;
 
     let player_idle_animations = HashMap::from([
-        (1, animation::Animation::new(&player_idle_texture, 0, 0, tile_size, 4, 10)),
-        (2, animation::Animation::new(&player_idle_texture, 0, 32, tile_size, 4, 10)),
-        (3, animation::Animation::new(&player_idle_texture, 0, 64, tile_size, 4, 10)),
-        (4, animation::Animation::new(&player_idle_texture, 0, 96, tile_size, 4, 10)),
+        (1, animation::Animation::new(&player_idle_texture, 0, 0, tile_size, 4, 15)),
+        (2, animation::Animation::new(&player_idle_texture, 0, 32, tile_size, 4, 15)),
+        (3, animation::Animation::new(&player_idle_texture, 0, 64, tile_size, 4, 15)),
+        (4, animation::Animation::new(&player_idle_texture, 0, 96, tile_size, 4, 15)),
     ]);
 
     let player_run_animations = HashMap::from([

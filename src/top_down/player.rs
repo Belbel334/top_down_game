@@ -120,6 +120,13 @@ impl Player<'_>
                 self.direction = 4;
             }
         }
+        else 
+        {
+            for i in 0..self.idle_animations.len() as u32
+            {
+                self.idle_animations.get_mut(&i).map(|val| val.reset_timing());
+            }
+        }
         // returning moveto location to player if wanting to move in a tile
         match tile_map.get_tile(self.moving_to.x as u32 / self.tile_size, self.moving_to.y as u32 / self.tile_size).get_hitbox()
         {

@@ -28,16 +28,20 @@ impl Animation<'_>
 
     pub fn draw(&mut self, canvas: &mut Canvas<Window>, location: Rect) -> Result<(), String>
     {
+        canvas.copy(&self.texture, self.frame_locations[(self.frame / self.frame_delay) as usize], location)?;
 
         self.frame += 1;
 
         if self.frame / self.frame_delay > self.length
         {
-            self.frame = 0;
+            self.reset_timing();
         }
 
-        canvas.copy(&self.texture, self.frame_locations[(self.frame / self.frame_delay) as usize], location)?;
-
         Ok(())
+    }
+
+    pub fn reset_timing(&mut self)
+    {
+        self.frame = 0;
     }
 }

@@ -28,7 +28,6 @@ impl Animation<'_>
 
     pub fn draw(&mut self, canvas: &mut Canvas<Window>, location: Rect) -> Result<(), String>
     {
-        canvas.copy(&self.texture, self.frame_locations[(self.frame / self.frame_delay) as usize], location)?;
 
         self.frame += 1;
 
@@ -36,6 +35,8 @@ impl Animation<'_>
         {
             self.frame = 0;
         }
+
+        canvas.copy(&self.texture, self.frame_locations[(self.frame / self.frame_delay) as usize], location)?;
 
         Ok(())
     }

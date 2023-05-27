@@ -1,5 +1,5 @@
 // ToDo:
-// - :Q
+// - enemys
 
 extern crate sdl2;
 

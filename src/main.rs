@@ -1,5 +1,5 @@
 // ToDo:
-// - enemys
+// - enemies
 
 extern crate sdl2;
 

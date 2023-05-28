@@ -124,6 +124,7 @@ impl Player<'_>
         {
             for i in 0..self.idle_animations.len() as u32
             {
+                // get rid of headbob by resetting the animations
                 self.idle_animations.get_mut(&i).map(|val| val.reset_timing());
             }
         }

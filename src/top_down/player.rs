@@ -125,7 +125,7 @@ impl Player<'_>
             for i in 0..self.idle_animations.len() as u32
             {
                 // get rid of headbob by resetting the animations
-                self.idle_animations.get_mut(&i).map(|val| val.reset_timing());
+                self.idle_animations.get_mut(&(i + 1)).map(|val| val.reset_timing());
             }
         }
         // returning moveto location to player if wanting to move in a tile

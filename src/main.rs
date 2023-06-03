@@ -13,7 +13,7 @@ use std::path::Path;
 use std::collections::HashMap;
 use std::time::{Instant, Duration};
 
-use crate::top_down::{player, tile_map, camera, animation};
+use crate::top_down::{player, tile_map, camera, animation, enemy};
 pub mod top_down;
 
 fn main() -> Result<(), String> {
@@ -119,6 +119,9 @@ fn main() -> Result<(), String> {
 
     let tile_map = tile_map::TileMap::new(tiles, tile_mode, 32, 32, tile_size, multiplier);
 
+    let enemy_texture = texture_creator.load_texture(Path::new("res/enemy.png"))?;
+    let mut enemy = enemy::Enemy::new(Rect::new(1024, 1024, tile_size, tile_size), animation::Animation::new(&enemy_texture, 0, 0, tile_size, 1, 25), 2);
+
     let mut keyboard_state;
 
     'mainloop: loop {
@@ -148,6 +151,9 @@ fn main() -> Result<(), String> {
 
         // drawing the tilemap
         tile_map.draw(&camera, &mut canvas)?;
+
+        // drawing the enemy
+        enemy.draw(&camera, &mut canvas)?;
 
         // drawing the player
         player.draw(&camera, screen_width, screen_height, &mut canvas)?;

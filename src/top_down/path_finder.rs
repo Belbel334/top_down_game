@@ -2,6 +2,8 @@ extern crate sdl2;
 
 use sdl2::rect::Point;
 
+use super::tile_map::TileMap;
+
 fn square_i32( num: i32 ) -> i32 { num * num }
 
 struct Node
@@ -33,7 +35,7 @@ impl Node
     }
 }
 
-pub fn path_finder (start: Point, end: Point, tile_map: &Vec<Vec<u32>>, solid_tiles: &[u32]) -> Result<Vec<u32>, String>
+pub fn find_path (start: Point, end: Point, tile_map: &TileMap, solid_tiles: &[u32], tile_size: i32) -> Vec<u32>
 {
     // list with values that can be used
     let mut open: Vec<Node> = Vec::new();
@@ -58,7 +60,7 @@ pub fn path_finder (start: Point, end: Point, tile_map: &Vec<Vec<u32>>, solid_ti
         // check if there is no path 
         if open.len() == 0
         {
-            return Err(String::from("impossible path"));
+            return vec![0];
         }
         // setting the current value to the lowest value in open
         current = Node::calculate(open[0].location, start, end, open[0].path_to_parrent.clone());
@@ -80,7 +82,7 @@ pub fn path_finder (start: Point, end: Point, tile_map: &Vec<Vec<u32>>, solid_ti
 
         if current.location == end
         {
-            return Ok(current.path_to_parrent);
+            return current.path_to_parrent;
         }
 
         // creating the neighbours of current paths
@@ -98,10 +100,10 @@ pub fn path_finder (start: Point, end: Point, tile_map: &Vec<Vec<u32>>, solid_ti
 
         // creating the neighbours 
         let neighbours = [
-            Node::calculate(Point::new(current.location.x + 1, current.location.y), start, end, path_to_current_1),
-            Node::calculate(Point::new(current.location.x - 1, current.location.y), start, end, path_to_current_2),
-            Node::calculate(Point::new(current.location.x, current.location.y + 1), start, end, path_to_current_3),
-            Node::calculate(Point::new(current.location.x, current.location.y - 1), start, end, path_to_current_4),
+            Node::calculate(Point::new(current.location.x + tile_size, current.location.y), start, end, path_to_current_1),
+            Node::calculate(Point::new(current.location.x - tile_size, current.location.y), start, end, path_to_current_2),
+            Node::calculate(Point::new(current.location.x, current.location.y + tile_size), start, end, path_to_current_3),
+            Node::calculate(Point::new(current.location.x, current.location.y - tile_size), start, end, path_to_current_4),
         ];
 
         //
@@ -116,16 +118,17 @@ pub fn path_finder (start: Point, end: Point, tile_map: &Vec<Vec<u32>>, solid_ti
                 }
             }
 
+            println!("{}", tile_map.get_map().len() as i32 * tile_size);
             if neighbour.location.y < 0 || neighbour.location.x < 0 ||
-                neighbour.location.y >= tile_map.len() as i32 || neighbour.location.x >= tile_map[0].len() as i32
-                {
-                    continue 'f;
-                }
+                neighbour.location.y >= tile_map.get_map().len() as i32 * tile_size * 2 || neighbour.location.x >= tile_map.get_map()[0].len() as i32 * tile_size * 2
+            {
+                continue 'f;
+            }
 
             // check if tile is solid 
             for val in solid_tiles
             {
-                if &tile_map[neighbour.location.y as usize][neighbour.location.x as usize] == val
+                if &tile_map.get_map()[neighbour.location.y as usize / 64][neighbour.location.x as usize / 64] == val
                 {
                     continue 'f;
                 }

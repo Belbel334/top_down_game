@@ -87,5 +87,10 @@ impl TileMap<'_>
     {
         &self.tile_mode[&self.tiles[y as usize][x as usize]]
     }
+    
+    pub fn get_map(&self) -> &Vec<Vec<u32>>
+    {
+        &self.tiles
+    }
 }
 

@@ -1,10 +1,12 @@
 use sdl2::render::Canvas;
 use sdl2::video::Window;
-use sdl2::rect::Rect;
+use sdl2::rect::{Rect, Point};
 
 use crate::camera::Camera;
 
 use super::animation::Animation;
+use super::path_finder::find_path;
+use super::tile_map::TileMap;
 
 pub struct Enemy<'a>
 {
@@ -26,8 +28,21 @@ impl Enemy<'_>
         Ok(())
     }
 
-    pub fn go_to()
+    pub fn go_to( &mut self, to: Point, tile_map: &TileMap, solid_tiles: &[u32]) 
     {
+        let path = find_path(Point::new(self.location.x, self.location.y), to, tile_map, solid_tiles, 32);
+
+        if path.len() != 0
+        {
+            match path[0] {
+                1 => self.location.y -= 32,
+                2 => self.location.x += 32,
+                3 => self.location.y += 32,
+                4 => self.location.x -= 32,
+                _ => (),
+            }
+        }
+
     }
 }
 

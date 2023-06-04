@@ -25,4 +25,10 @@ impl Enemy<'_>
         self.animation.draw(canvas, Rect::new(self.location.x - camera.get_x(), self.location.y - camera.get_y(), self.location.width() * self.multiplier, self.location.height() * self.multiplier))?;
         Ok(())
     }
+
+    pub fn go_to()
+    {
+    }
 }
+
+

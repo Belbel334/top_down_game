@@ -118,7 +118,6 @@ pub fn find_path (start: Point, end: Point, tile_map: &TileMap, solid_tiles: &[u
                 }
             }
 
-            println!("{}", tile_map.get_map().len() as i32 * tile_size);
             if neighbour.location.y < 0 || neighbour.location.x < 0 ||
                 neighbour.location.y >= tile_map.get_map().len() as i32 * tile_size * 2 || neighbour.location.x >= tile_map.get_map()[0].len() as i32 * tile_size * 2
             {

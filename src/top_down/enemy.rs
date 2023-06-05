@@ -35,10 +35,10 @@ impl Enemy<'_>
         if path.len() != 0
         {
             match path[0] {
-                1 => self.location.y -= 32,
-                2 => self.location.x += 32,
-                3 => self.location.y += 32,
-                4 => self.location.x -= 32,
+                1 => self.location.y -= 32 * 2,
+                2 => self.location.x += 32 * 2,
+                3 => self.location.y += 32 * 2,
+                4 => self.location.x -= 32 * 2,
                 _ => (),
             }
         }

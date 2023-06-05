@@ -171,6 +171,11 @@ impl Player<'_>
     {
         self.location
     }
+
+    pub fn is_moving(&self) -> bool
+    {
+        self.is_moving
+    }
 }
 
 

@@ -3,7 +3,6 @@ use sdl2::video::Window;
 use sdl2::rect::Rect;
 use sdl2::keyboard::{Scancode, KeyboardState};
 
-use crate::camera::{Camera, CameraMode};
 use crate::tile_map::{TileMap, TileHitBox};
 
 use std::collections::HashMap;
@@ -41,52 +40,25 @@ impl Player<'_>
         }
     }
 
-    pub fn draw(&mut self, camera: &Camera, screen_width: u32, screen_heigt: u32, canvas: &mut Canvas<Window>) -> Result<(), String>
+    pub fn draw(&mut self, screen_width: u32, screen_heigt: u32, canvas: &mut Canvas<Window>) -> Result<(), String>
     {
-        match camera.get_camera_mode()
-        {
-            CameraMode::FollowPlayer =>
+        match self.is_moving {
+            true =>
             {
-                match self.is_moving {
-                    true =>
-                    {
-                        self.run_animations.get_mut(&self.direction).map(|val| val.draw(canvas,
-                                    // putting player in the center of the screen
-                                    Rect::new(( screen_width / 2 - self.location.width() / 2 ) as i32,
-                                              ( screen_heigt / 2 - self.location.height() / 2 ) as i32, 
-                                              self.location.width(), self.location.height())));
-                    },
-                    false =>
-                    {
-                        self.idle_animations.get_mut(&self.direction).map(|val| val.draw(canvas,
-                                    // putting player in the center of the screen
-                                    Rect::new(( screen_width / 2 - self.location.width() / 2 ) as i32,
-                                              ( screen_heigt / 2 - self.location.height() / 2 ) as i32, 
-                                              self.location.width(), self.location.height())));
-                    },
-                }
-            },
-            CameraMode::StaticLocation => 
-            {
-                match self.is_moving {
-                    true =>
-                    {
-                        self.run_animations.get_mut(&self.direction).map(|val| val.draw(canvas,
-                                    // drawing the player according to the camera
-                                    Rect::new(self.location.x - camera.get_x(),
-                                             self.location.y - camera.get_y(),
-                                             self.location.width(), self.location.height())));
-                    },
-                    false =>
-                    {
-                        self.idle_animations.get_mut(&self.direction).map(|val| val.draw(canvas,
-                                    // drawing the player according to the camera
-                                    Rect::new(self.location.x - camera.get_x(),
-                                             self.location.y - camera.get_y(),
-                                             self.location.width(), self.location.height())));
-                    },
-                }
-            }
+                self.run_animations.get_mut(&self.direction).map(|val| val.draw(canvas,
+                            // putting player in the center of the screen
+                           Rect::new(( screen_width / 2 - self.location.width() / 2 ) as i32,
+                                     ( screen_heigt / 2 - self.location.height() / 2 ) as i32, 
+                                     self.location.width(), self.location.height())));
+           },
+           false =>
+           {
+               self.idle_animations.get_mut(&self.direction).map(|val| val.draw(canvas,
+                           // putting player in the center of the screen
+                           Rect::new(( screen_width / 2 - self.location.width() / 2 ) as i32,
+                                     ( screen_heigt / 2 - self.location.height() / 2 ) as i32, 
+                                     self.location.width(), self.location.height())));
+           },
         }
         Ok(())
     }

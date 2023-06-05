@@ -1,20 +1,14 @@
 use crate::player::Player;
 
-pub enum CameraMode {
-    FollowPlayer,
-    StaticLocation,
-}
-
 pub struct Camera {
-    camera_mode: CameraMode,
     x: i32,
     y: i32,
 }
 
 impl Camera {
-    pub fn new (camera_mode: CameraMode, x: i32, y: i32) -> Camera
+    pub fn new ( x: i32, y: i32 ) -> Camera
     {
-        Camera { camera_mode, x, y }
+        Camera { x, y }
     }
 
     pub fn get_x(&self) -> i32 
@@ -29,23 +23,11 @@ impl Camera {
 
     pub fn move_camera(&mut self, player: &Player, screen_width: u32, screen_heigt: u32)
     {
-        match self.camera_mode
-        {
-            CameraMode::FollowPlayer =>
-            {
-                // getting player location
-                let player_location = player.get_location();
-                
-                // moving camera to player
-                self.x = player_location.x - screen_width as i32 / 2 + player_location.width() as i32 / 2;
-                self.y = player_location.y - screen_heigt as i32 / 2 + player_location.height() as i32 / 2;
-            }
-            CameraMode::StaticLocation => ()
-        }
-    }
+        // getting player location
+        let player_location = player.get_location();
 
-    pub fn get_camera_mode(&self) -> &CameraMode
-    {
-        &self.camera_mode
+        // moving camera to player
+        self.x = player_location.x - screen_width as i32 / 2 + player_location.width() as i32 / 2;
+        self.y = player_location.y - screen_heigt as i32 / 2 + player_location.height() as i32 / 2;
     }
 }

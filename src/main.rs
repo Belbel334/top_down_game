@@ -1,5 +1,5 @@
 // ToDo:
-// - enemies
+// - 
 
 extern crate sdl2;
 
@@ -95,7 +95,7 @@ fn main() -> Result<(), String> {
     let tile_mode = HashMap::from([(0, tile_map::Tile::new(tile_map::TileHitBox::None, Rect::new(32, 0, tile_size, tile_size), &ground_texture)),
                                    (1, tile_map::Tile::new(tile_map::TileHitBox::Full, Rect::new(0, 0, tile_size, tile_size), &ground_texture))]);
 
-    let mut camera = camera::Camera::new(camera::CameraMode::FollowPlayer, 0, 0);
+    let mut camera = camera::Camera::new( 0, 0 );
 
     let player_idle_texture = texture_creator.load_texture(Path::new("res/player_idle.png"))?;
 
@@ -163,7 +163,7 @@ fn main() -> Result<(), String> {
         enemy.draw(&camera, &mut canvas)?;
 
         // drawing the player
-        player.draw(&camera, screen_width, screen_height, &mut canvas)?;
+        player.draw(screen_width, screen_height, &mut canvas)?;
 
         // drawing to the screen
         canvas.present();

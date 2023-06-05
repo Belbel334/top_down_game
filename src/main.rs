@@ -147,6 +147,7 @@ fn main() -> Result<(), String> {
         {
             enemy.go_to(Point::new(player.get_location().x, player.get_location().y), &tile_map, &[1]);
         }
+        enemy.move_enemy(2);
 
         // moving the camera 
         camera.move_camera(&player, screen_width, screen_height);

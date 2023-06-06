@@ -5,7 +5,6 @@
 extern crate sdl2;
 
 use sdl2::event::Event;
-use sdl2::mouse::MouseState;
 use sdl2::rect::{Rect, Point};
 use sdl2::image::{InitFlag, LoadTexture};
 use sdl2::pixels::Color;
@@ -126,10 +125,10 @@ fn main() -> Result<(), String> {
     let mut enemy = enemy::Enemy::new(Rect::new(1024, 1024, tile_size, tile_size), animation::Animation::new(&enemy_texture, 0, 0, tile_size, 4, 15), 2);
 
     let menu_texture = texture_creator.load_texture(Path::new("res/menu.png"))?;
-    let main_menu = menu::Menu::new(&menu_texture, 
+    let mut main_menu = menu::Menu::new(&menu_texture, 
                                         Rect::new(0, 0, 32, 16), Rect::new(0, 0, 128, 64),
                                         Rect::new(0, 0, 0, 0), Rect::new(0, 0, 0, 0),
-                                        Color::RGB(45, 45, 45), MouseState::new(&events));
+                                        Color::RGB(45, 45, 45));
 
     let mut keyboard_state;
 
@@ -180,7 +179,7 @@ fn main() -> Result<(), String> {
         }
         else {
             main_menu.draw(&mut canvas)?;
-            playing = main_menu.get_input();
+            playing = main_menu.get_input( events.mouse_state() );
         }
 
         // drawing to the screen

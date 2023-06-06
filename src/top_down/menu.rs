@@ -14,14 +14,13 @@ pub struct Menu<'a>
     logo_src: Rect,
     logo_dst: Rect,
     bg_color: Color,
-    mouse_state: MouseState,
 }
 
 impl Menu<'_>
 {
-    pub fn new<'a>( texture: &'a Texture<'a>, play_src: Rect, play_dst: Rect, logo_src: Rect, logo_dst: Rect, bg_color: Color, mouse_state: MouseState ) -> Menu<'a>
+    pub fn new<'a>( texture: &'a Texture<'a>, play_src: Rect, play_dst: Rect, logo_src: Rect, logo_dst: Rect, bg_color: Color ) -> Menu<'a>
     {
-        Menu { texture, play_src, play_dst, logo_src, logo_dst, bg_color, mouse_state}
+        Menu { texture, play_src, play_dst, logo_src, logo_dst, bg_color}
     }
 
     pub fn draw( &self, canvas: &mut Canvas<Window> ) -> Result<(), String>
@@ -33,12 +32,10 @@ impl Menu<'_>
         Ok(())
     }
 
-    pub fn get_input( &mut self ) -> bool
+    pub fn get_input( &mut self, mouse_state: MouseState ) -> bool
     {
-        println!("{}", self.mouse_state.x());
-        if self.mouse_state.left()
+        if mouse_state.left()
         {
-            println!("aaaaaaaaaaaaaa");
             return true;
         }
         return false;

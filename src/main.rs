@@ -126,9 +126,9 @@ fn main() -> Result<(), String> {
 
     let menu_texture = texture_creator.load_texture(Path::new("res/menu.png"))?;
     let mut main_menu = menu::Menu::new(&menu_texture, 
-                                        Rect::new(0, 0, 32, 16), Rect::new(0, 0, 128, 64),
+                                        Rect::new(0, 0, 32, 16), Rect::new(screen_width as i32/2-64, screen_height as i32/2-32, 128, 64),
                                         Rect::new(0, 0, 0, 0), Rect::new(0, 0, 0, 0),
-                                        Color::RGB(45, 45, 45));
+                                        Color::RGB(34, 70, 57));
 
     let mut keyboard_state;
 

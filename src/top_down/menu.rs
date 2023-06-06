@@ -1,5 +1,3 @@
-use std::collections::TryReserveError;
-
 use sdl2::pixels::Color;
 use sdl2::video::Window;
 use sdl2::rect::Rect;
@@ -34,6 +32,17 @@ impl Menu<'_>
 
     pub fn get_input( &mut self, mouse_state: MouseState ) -> bool
     {
+        if mouse_state.x() >= self.play_dst.x + self.play_dst.width() as i32 ||
+           mouse_state.x() <= self.play_dst.x
+        {
+            return false;
+        }
+        if mouse_state.y() >= self.play_dst.y + self.play_dst.height() as i32 ||
+           mouse_state.y() <= self.play_dst.y
+        {
+            return false;
+        }
+
         if mouse_state.left()
         {
             return true;

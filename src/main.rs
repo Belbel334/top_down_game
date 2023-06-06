@@ -122,7 +122,7 @@ fn main() -> Result<(), String> {
     let tile_map = tile_map::TileMap::new(tiles, tile_mode, 32, 32, tile_size, multiplier);
 
     let enemy_texture = texture_creator.load_texture(Path::new("res/enemy.png"))?;
-    let mut enemy = enemy::Enemy::new(Rect::new(1024, 1024, tile_size, tile_size), animation::Animation::new(&enemy_texture, 0, 0, tile_size, 4, 15), 2);
+    let mut enemy = enemy::Enemy::new(Rect::new(1024, 1024, tile_size, tile_size), animation::Animation::new(&enemy_texture, 0, 0, tile_size, 4, 15), tile_size, multiplier);
 
     let menu_texture = texture_creator.load_texture(Path::new("res/menu.png"))?;
     let mut main_menu = menu::Menu::new(&menu_texture, 

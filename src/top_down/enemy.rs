@@ -10,18 +10,19 @@ use super::tile_map::TileMap;
 
 pub struct Enemy<'a>
 {
+    tile_size: u32,
+    multiplier: u32,
     location: Rect,
     moving_to: Rect,
-    multiplier: u32,
     is_moving: bool,
     animation: Animation<'a>,
 }
 
 impl Enemy<'_>
 {
-    pub fn new<'a>( location: Rect, animation: Animation<'a>, multiplier: u32 ) -> Enemy
+    pub fn new<'a>( location: Rect, animation: Animation<'a>, tile_size: u32, multiplier: u32 ) -> Enemy
     {
-        Enemy { multiplier, location, moving_to: location, animation, is_moving: false }
+        Enemy { tile_size: tile_size * multiplier, multiplier, location, moving_to: location, animation, is_moving: false }
     }
 
     pub fn draw( &mut self, camera: &Camera, canvas: &mut Canvas<Window> ) -> Result<(), String>
@@ -39,15 +40,15 @@ impl Enemy<'_>
 
         self.is_moving = true;
 
-        let path = find_path(Point::new(self.location.x, self.location.y), to, tile_map, solid_tiles, 64);
+        let path = find_path(Point::new(self.location.x, self.location.y), to, tile_map, solid_tiles, self.tile_size as i32);
 
         if path.len() != 0
         {
             match path[0] {
-                1 => self.moving_to.y -= 32 * 2,
-                2 => self.moving_to.x += 32 * 2,
-                3 => self.moving_to.y += 32 * 2,
-                4 => self.moving_to.x -= 32 * 2,
+                1 => self.moving_to.y -= self.tile_size as i32,
+                2 => self.moving_to.x += self.tile_size as i32,
+                3 => self.moving_to.y += self.tile_size as i32,
+                4 => self.moving_to.x -= self.tile_size as i32,
                 _ => (),
             }
         }

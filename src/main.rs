@@ -5,10 +5,12 @@
 extern crate sdl2;
 
 use sdl2::event::Event;
+use sdl2::mouse::MouseState;
 use sdl2::rect::{Rect, Point};
 use sdl2::image::{InitFlag, LoadTexture};
 use sdl2::pixels::Color;
 use sdl2::keyboard::Scancode;
+use top_down::menu;
 
 use std::path::Path;
 use std::collections::HashMap;
@@ -123,7 +125,15 @@ fn main() -> Result<(), String> {
     let enemy_texture = texture_creator.load_texture(Path::new("res/enemy.png"))?;
     let mut enemy = enemy::Enemy::new(Rect::new(1024, 1024, tile_size, tile_size), animation::Animation::new(&enemy_texture, 0, 0, tile_size, 4, 15), 2);
 
+    let menu_texture = texture_creator.load_texture(Path::new("res/menu.png"))?;
+    let main_menu = menu::Menu::new(&menu_texture, 
+                                        Rect::new(0, 0, 32, 16), Rect::new(0, 0, 128, 64),
+                                        Rect::new(0, 0, 0, 0), Rect::new(0, 0, 0, 0),
+                                        Color::RGB(45, 45, 45), MouseState::new(&events));
+
     let mut keyboard_state;
+
+    let mut playing = false;
 
     'mainloop: loop {
         loop_instant = Instant::now();
@@ -137,34 +147,41 @@ fn main() -> Result<(), String> {
             }
         }
         
-        keyboard_state = events.keyboard_state();
-        player.get_input(&tile_map, keyboard_state, Scancode::Up, Scancode::Down, Scancode::Right, Scancode::Left);
-
-        // moving the player
-        player.move_player();
-
-        // moving the enemy
-        if !player.is_moving()
+        if playing
         {
-            enemy.go_to(Point::new(player.get_location().x, player.get_location().y), &tile_map, &[1]);
+            keyboard_state = events.keyboard_state();
+            player.get_input(&tile_map, keyboard_state, Scancode::Up, Scancode::Down, Scancode::Right, Scancode::Left);
+
+            // moving the player
+            player.move_player();
+
+            // moving the enemy
+            if !player.is_moving()
+            {
+                enemy.go_to(Point::new(player.get_location().x, player.get_location().y), &tile_map, &[1]);
+            }
+            enemy.move_enemy(2);
+
+            // moving the camera 
+            camera.move_camera(&player, screen_width, screen_height);
+
+            // clearing window
+            canvas.set_draw_color(Color::RGB(45, 45, 45));
+            canvas.clear();
+
+            // drawing the tilemap
+            tile_map.draw(&camera, &mut canvas)?;
+
+            // drawing the enemy
+            enemy.draw(&camera, &mut canvas)?;
+
+            // drawing the player
+            player.draw(screen_width, screen_height, &mut canvas)?;
         }
-        enemy.move_enemy(2);
-
-        // moving the camera 
-        camera.move_camera(&player, screen_width, screen_height);
-
-        // clearing window
-        canvas.set_draw_color(Color::RGB(45, 45, 45));
-        canvas.clear();
-
-        // drawing the tilemap
-        tile_map.draw(&camera, &mut canvas)?;
-
-        // drawing the enemy
-        enemy.draw(&camera, &mut canvas)?;
-
-        // drawing the player
-        player.draw(screen_width, screen_height, &mut canvas)?;
+        else {
+            main_menu.draw(&mut canvas)?;
+            playing = main_menu.get_input();
+        }
 
         // drawing to the screen
         canvas.present();

@@ -125,10 +125,10 @@ fn main() -> Result<(), String> {
     let mut enemy = enemy::Enemy::new(Rect::new(1024, 1024, tile_size, tile_size), animation::Animation::new(&enemy_texture, 0, 0, tile_size, 4, 15), tile_size, multiplier);
 
     let menu_texture = texture_creator.load_texture(Path::new("res/menu.png"))?;
-    let mut main_menu = menu::Menu::new(&menu_texture, 
-                                        Rect::new(0, 0, 32, 16), Rect::new(screen_width as i32/2-64, screen_height as i32/2-32, 128, 64),
-                                        Rect::new(0, 0, 0, 0), Rect::new(0, 0, 0, 0),
-                                        Color::RGB(34, 70, 57));
+    let mut main_menu = menu::Menu::new(tile_size, multiplier, &menu_texture, 
+                                        Rect::new(0, 32, 64, 32), Rect::new(screen_width as i32/2-128, screen_height as i32/2, 256, 128),
+                                        Rect::new(0, 0, 256, 32), Rect::new(screen_width as i32/2-512, 70, 1024, 128),
+                                        Rect::new(64, 32, 32, 32));
 
     let mut keyboard_state;
 
@@ -180,6 +180,12 @@ fn main() -> Result<(), String> {
         else {
             main_menu.draw(&mut canvas)?;
             playing = main_menu.get_input( events.mouse_state() );
+
+            keyboard_state = events.keyboard_state();
+            if keyboard_state.is_scancode_pressed(Scancode::Space) || keyboard_state.is_scancode_pressed(Scancode::Return)
+            {
+                playing = true;
+            }
         }
 
         // drawing to the screen

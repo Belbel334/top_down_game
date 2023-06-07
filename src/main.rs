@@ -1,5 +1,6 @@
 // ToDo:
 // - Ui
+// - slime only follows player if in screen
 // - combat
 
 extern crate sdl2;

@@ -151,7 +151,7 @@ impl Player<'_>
         {
             return;
         }
-        if elf.location.y < enemy.get_location().y || self.location.y > enemy.get_location().y + self.tile_size as i32 ||
+        if self.location.y < enemy.get_location().y || self.location.y > enemy.get_location().y + self.tile_size as i32 ||
            self.location.y + (self.tile_size as i32) < enemy.get_location().y || self.location.y + (self.tile_size as i32) > enemy.get_location().y + self.tile_size as i32
         {
             return;

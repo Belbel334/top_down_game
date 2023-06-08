@@ -21,13 +21,13 @@ impl Menu<'_>
         Menu { tile_size: tile_size * multiplier, texture, play_src, play_dst, logo_src, logo_dst, tile_src}
     }
 
-    pub fn draw( &self, canvas: &mut Canvas<Window> ) -> Result<(), String>
+    pub fn draw( &self, screen_width: u32, screen_height: u32, canvas: &mut Canvas<Window> ) -> Result<(), String>
     {
-        for x in 0..100
+        for x in 0..(screen_width / self.tile_size)
         {
-            for y in 0..100
+            for y in 0..(screen_height / self.tile_size)
             {
-                canvas.copy(self.texture, self.tile_src, Rect::new(x * self.tile_size as i32, y * self.tile_size as i32, self.tile_size, self.tile_size))?;
+                canvas.copy(self.texture, self.tile_src, Rect::new((x * self.tile_size) as i32, (y * self.tile_size) as i32, self.tile_size, self.tile_size))?;
             }
         }
         canvas.copy(self.texture, self.play_src, self.play_dst)?;

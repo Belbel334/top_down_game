@@ -179,7 +179,7 @@ fn main() -> Result<(), String> {
             player.draw(screen_width, screen_height, &mut canvas)?;
         }
         else {
-            main_menu.draw(&mut canvas)?;
+            main_menu.draw(screen_width, screen_height, &mut canvas)?;
             playing = main_menu.get_input( events.mouse_state() );
 
             keyboard_state = events.keyboard_state();

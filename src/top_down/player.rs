@@ -144,19 +144,20 @@ impl Player<'_>
         }
     }
 
-    pub fn take_damage( &mut self, enemy: &Enemy )
+    pub fn take_damage( &mut self, enemy: &Enemy ) -> bool
     {
         if self.location.x < enemy.get_location().x || self.location.x > enemy.get_location().x + self.tile_size as i32 ||
            self.location.x + (self.tile_size as i32) < enemy.get_location().x || self.location.x + (self.tile_size as i32) > enemy.get_location().x + self.tile_size as i32
         {
-            return;
+            return false;
         }
         if self.location.y < enemy.get_location().y || self.location.y > enemy.get_location().y + self.tile_size as i32 ||
            self.location.y + (self.tile_size as i32) < enemy.get_location().y || self.location.y + (self.tile_size as i32) > enemy.get_location().y + self.tile_size as i32
         {
-            return;
+            return false;
         }
         self.lives.take_damage(1);
+        true
     }
 
     pub fn get_location(&self) -> Rect

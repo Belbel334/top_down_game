@@ -189,8 +189,10 @@ fn main() -> Result<(), String> {
 
                 if frame >= hit_delay
                 {
-                    player.take_damage(enemy);
-                    frame = 0;
+                    if player.take_damage(enemy)
+                    {
+                        frame = 0;
+                    }
                 }
             }
 
@@ -217,7 +219,6 @@ fn main() -> Result<(), String> {
             std::thread::sleep( Duration::from_millis( ( frame_delay - time_elapsed.as_millis() ) as u64 ) );
         }
     }
-
     Ok(())
 }
 

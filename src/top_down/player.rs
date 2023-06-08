@@ -4,10 +4,10 @@ use sdl2::rect::Rect;
 use sdl2::keyboard::{Scancode, KeyboardState};
 
 use crate::tile_map::{TileMap, TileHitBox};
+use crate::animation::Animation;
+use crate::top_down::in_game_ui::Lives;
 
 use std::collections::HashMap;
-
-use super::animation::Animation;
 
 pub struct Player<'a> 
 {
@@ -17,6 +17,7 @@ pub struct Player<'a>
     idle_animations: HashMap<u32, Animation<'a>>,
     run_animations: HashMap<u32, Animation<'a>>,
     direction: u32,
+    lives: Lives<'a>,
     // movement variables
     is_moving: bool,
     moving_to: Rect,
@@ -24,7 +25,7 @@ pub struct Player<'a>
 
 impl Player<'_>
 {
-    pub fn new<'a>(tile_size: u32, multiplier: u32, speed: i32, location: Rect, idle_animations: HashMap<u32, Animation<'a>>, run_animations: HashMap<u32, Animation<'a>>) -> Player<'a>
+    pub fn new<'a>(tile_size: u32, multiplier: u32, speed: i32, location: Rect, idle_animations: HashMap<u32, Animation<'a>>, run_animations: HashMap<u32, Animation<'a>>, lives: Lives) -> Player<'a>
     {
         Player
         {
@@ -34,6 +35,7 @@ impl Player<'_>
             idle_animations,
             run_animations,
             direction: 3,
+            lives,
             // movement variables
             is_moving: false,
             moving_to: location,

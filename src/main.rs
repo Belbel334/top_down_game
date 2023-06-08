@@ -10,13 +10,14 @@ use sdl2::rect::{Rect, Point};
 use sdl2::image::{InitFlag, LoadTexture};
 use sdl2::pixels::Color;
 use sdl2::keyboard::Scancode;
+use top_down::in_game_ui::Lives;
 use top_down::menu;
 
 use std::path::Path;
 use std::collections::HashMap;
 use std::time::{Instant, Duration};
 
-use crate::top_down::{player, tile_map, camera, animation, enemy};
+use crate::top_down::{player, tile_map, camera, animation, enemy, in_game_ui};
 pub mod top_down;
 
 fn main() -> Result<(), String> {
@@ -118,7 +119,10 @@ fn main() -> Result<(), String> {
         (4, animation::Animation::new(&player_run_texture, 0, 96, tile_size, 4, 5)),
     ]);
 
-    let mut player = player::Player::new(tile_size, multiplier, 4, Rect::new(512, 512, 64, 64), player_idle_animations, player_run_animations);
+    let igui = texture_creator.load_texture(Path::new("res/IGUI.png"))?;
+    let lives = Lives::new(&igui, 3, Rect::new(0, 0, 32, 32), Rect::new(0, 32, 32, 32), tile_size, multiplier);
+
+    let mut player = player::Player::new(tile_size, multiplier, 4, Rect::new(512, 512, 64, 64), player_idle_animations, player_run_animations, lives);
 
     let tile_map = tile_map::TileMap::new(tiles, tile_mode, 32, 32, tile_size, multiplier);
 

@@ -144,14 +144,11 @@ impl Player<'_>
         }
     }
 
-    pub fn take_damage( &mut self, enemies: &Vec<Enemy> )
+    pub fn take_damage( &mut self, enemy: &Enemy )
     {
-        for enemy in enemies
+        if enemy.get_location().x == self.location.x && enemy.get_location().y == self.location.y
         {
-            if enemy.get_location().x == self.location.x && enemy.get_location().y == self.location.y
-            {
-                self.lives.take_damage(1);
-            }
+            self.lives.take_damage(1);
         }
     }
 

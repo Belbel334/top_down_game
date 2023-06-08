@@ -135,11 +135,16 @@ fn main() -> Result<(), String> {
                                         Rect::new(0, 0, 256, 32), Rect::new(screen_width as i32/2-512, 70, 1024, 128),
                                         Rect::new(64, 32, 32, 32));
 
+    let hit_delay = 40;
+    let mut frame = 0;
+
     let mut keyboard_state;
 
     let mut playing = false;
 
     'mainloop: loop {
+        frame += 1;
+
         loop_instant = Instant::now();
 
         for event in events.poll_iter() {
@@ -158,7 +163,6 @@ fn main() -> Result<(), String> {
 
             // moving the player
             player.move_player();
-            player.take_damage(&enemies);
 
             // moving the camera 
             camera.move_camera(&player, screen_width, screen_height);
@@ -180,6 +184,12 @@ fn main() -> Result<(), String> {
                 if !player.is_moving()
                 {
                     enemy.go_to(Point::new(player.get_location().x, player.get_location().y), &tile_map, &[1]);
+                }
+
+                if frame >= hit_delay
+                {
+                    player.take_damage(enemy);
+                    frame = 0;
                 }
             }
 

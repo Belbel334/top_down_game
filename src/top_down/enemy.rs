@@ -81,5 +81,10 @@ impl Enemy<'_>
             self.location.y += speed;
         }
     }
+
+    pub fn get_location( &self ) -> Rect
+    {
+        self.location
+    }
 }
 

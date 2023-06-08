@@ -9,6 +9,8 @@ use crate::top_down::in_game_ui::Lives;
 
 use std::collections::HashMap;
 
+use super::enemy::Enemy;
+
 pub struct Player<'a> 
 {
     speed: i32,
@@ -25,7 +27,7 @@ pub struct Player<'a>
 
 impl Player<'_>
 {
-    pub fn new<'a>(tile_size: u32, multiplier: u32, speed: i32, location: Rect, idle_animations: HashMap<u32, Animation<'a>>, run_animations: HashMap<u32, Animation<'a>>, lives: Lives) -> Player<'a>
+    pub fn new<'a>(tile_size: u32, multiplier: u32, speed: i32, location: Rect, idle_animations: HashMap<u32, Animation<'a>>, run_animations: HashMap<u32, Animation<'a>>, lives: Lives<'a>) -> Player<'a>
     {
         Player
         {
@@ -62,6 +64,7 @@ impl Player<'_>
                                      self.location.width(), self.location.height())));
            },
         }
+        self.lives.draw(canvas)?;
         Ok(())
     }
 
@@ -138,6 +141,17 @@ impl Player<'_>
         }
         else if self.location.y < self.moving_to.y {
             self.location.y += self.speed;
+        }
+    }
+
+    pub fn take_damage( &mut self, enemies: &Vec<Enemy> )
+    {
+        for enemy in enemies
+        {
+            if enemy.get_location().x == self.location.x && enemy.get_location().y == self.location.y
+            {
+                self.lives.take_damage(1);
+            }
         }
     }
 

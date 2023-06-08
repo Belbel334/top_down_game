@@ -128,7 +128,6 @@ fn main() -> Result<(), String> {
     let mut enemies = vec![
         enemy::Enemy::new(Rect::new(1024, 1024, tile_size, tile_size), animation::Animation::new(&enemy_texture, 0, 0, tile_size, 4, 15), tile_size, multiplier),
     ];
-    let mut e = enemy::Enemy::new(Rect::new(1024, 1024, tile_size, tile_size), animation::Animation::new(&enemy_texture, 0, 0, tile_size, 4, 15), tile_size, multiplier);
 
     let menu_texture = texture_creator.load_texture(Path::new("res/menu.png"))?;
     let mut main_menu = menu::Menu::new(tile_size, multiplier, &menu_texture, 
@@ -157,17 +156,6 @@ fn main() -> Result<(), String> {
             keyboard_state = events.keyboard_state();
             player.get_input(&tile_map, keyboard_state, Scancode::Up, Scancode::Down, Scancode::Right, Scancode::Left);
 
-            // moving the enemy
-            for enemy in &mut enemies
-            {
-                enemy.draw(&camera, &mut canvas)?;
-                enemy.move_enemy(2);
-                if !player.is_moving()
-                {
-                    enemy.go_to(Point::new(player.get_location().x, player.get_location().y), &tile_map, &[1]);
-                }
-            }
-
             // moving the player
             player.move_player();
             player.take_damage(&enemies);
@@ -181,6 +169,19 @@ fn main() -> Result<(), String> {
 
             // drawing the tilemap
             tile_map.draw(&camera, &mut canvas)?;
+
+            // drawing and moving the enemy to the player
+            for enemy in &mut enemies
+            {
+                enemy.draw(&camera, &mut canvas)?;
+
+                enemy.move_enemy(2);
+
+                if !player.is_moving()
+                {
+                    enemy.go_to(Point::new(player.get_location().x, player.get_location().y), &tile_map, &[1]);
+                }
+            }
 
             // drawing the player
             player.draw(screen_width, screen_height, &mut canvas)?;

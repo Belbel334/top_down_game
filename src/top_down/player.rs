@@ -146,43 +146,17 @@ impl Player<'_>
 
     pub fn take_damage( &mut self, enemy: &Enemy )
     {
-        if enemy.get_location().x >= self.location.x + self.tile_size as i32 ||
-           enemy.get_location().x <= self.location.x
+        if self.location.x < enemy.get_location().x || self.location.x > enemy.get_location().x + self.tile_size as i32 ||
+           self.location.x + (self.tile_size as i32) < enemy.get_location().x || self.location.x + (self.tile_size as i32) > enemy.get_location().x + self.tile_size as i32
         {
             return;
         }
-        if enemy.get_location().x + self.tile_size as i32 >= self.location.x + self.tile_size as i32 ||
-           enemy.get_location().x + self.tile_size as i32 <= self.location.x
-        {
-            return;
-        }
-        if enemy.get_location().y >= self.location.y + self.tile_size as i32 ||
-           enemy.get_location().y <= self.location.y
-        {
-            return;
-        }
-        if enemy.get_location().y + self.tile_size as i32 >= self.location.y + self.tile_size as i32 ||
-           enemy.get_location().y + self.tile_size as i32 <= self.location.y
+        if elf.location.y < enemy.get_location().y || self.location.y > enemy.get_location().y + self.tile_size as i32 ||
+           self.location.y + (self.tile_size as i32) < enemy.get_location().y || self.location.y + (self.tile_size as i32) > enemy.get_location().y + self.tile_size as i32
         {
             return;
         }
         self.lives.take_damage(1);
-        //if mouse_state.x() >= self.play_dst.x + self.play_dst.width() as i32 ||
-        //   mouse_state.x() <= self.play_dst.x
-        //{
-        //    return false;
-        //}
-        //if mouse_state.y() >= self.play_dst.y + self.play_dst.height() as i32 ||
-        //   mouse_state.y() <= self.play_dst.y
-        //{
-        //    return false;
-        //}
-
-        //if mouse_state.left()
-        //{
-        //    return true;
-        //}
-        //return false;
     }
 
     pub fn get_location(&self) -> Rect

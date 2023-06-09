@@ -16,6 +16,7 @@ pub struct Enemy<'a>
     moving_to: Rect,
     is_moving: bool,
     allert_range: f32,
+    is_attacking: bool,
     animation: Animation<'a>,
 }
 
@@ -23,7 +24,7 @@ impl Enemy<'_>
 {
     pub fn new<'a>( location: Rect, animation: Animation<'a>, tile_size: u32, multiplier: u32, allert_range: f32 ) -> Enemy
     {
-        Enemy { tile_size: tile_size * multiplier, multiplier, location, moving_to: location, animation, is_moving: false, allert_range }
+        Enemy { tile_size: tile_size * multiplier, multiplier, location, moving_to: location, animation, is_moving: false, allert_range, is_attacking: false }
     }
 
     pub fn draw( &mut self, camera: &Camera, canvas: &mut Canvas<Window> ) -> Result<(), String>
@@ -36,7 +37,7 @@ impl Enemy<'_>
     {
         let distance = (((to.x - self.location.x) * (to.x - self.location.x) + (to.y - self.location.y) * (to.y - self.location.y)) as f32).sqrt();
 
-        if distance > self.allert_range
+        if distance > self.allert_range && !self.is_attacking
         {
             return;
         }
@@ -46,6 +47,7 @@ impl Enemy<'_>
             return;
         }
 
+        self.is_attacking = true;
         self.is_moving = true;
 
         let path = find_path(Point::new(self.location.x, self.location.y), to, tile_map, solid_tiles, self.tile_size as i32);

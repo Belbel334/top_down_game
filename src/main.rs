@@ -1,4 +1,5 @@
 // ToDo:
+// - !! fix collisions !!
 // - Ui
 // - draw only tiles in screen
 // - slime only follows player if in screen

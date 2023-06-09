@@ -9,7 +9,6 @@ extern crate sdl2;
 use sdl2::event::Event;
 use sdl2::rect::{Rect, Point};
 use sdl2::image::{InitFlag, LoadTexture};
-use sdl2::pixels::Color;
 use sdl2::keyboard::Scancode;
 
 use std::path::Path;
@@ -159,6 +158,11 @@ fn main() -> Result<(), String> {
         
         if playing
         {
+            if !player.check_alive()
+            {
+                break 'mainloop;
+            }
+
             keyboard_state = events.keyboard_state();
             player.get_input(&tile_map, keyboard_state, Scancode::Up, Scancode::Down, Scancode::Right, Scancode::Left);
 
@@ -209,6 +213,10 @@ fn main() -> Result<(), String> {
                 playing = true;
             }
         }
+
+        canvas.set_blend_mode(sdl2::render::BlendMode::Blend);
+        canvas.set_draw_color(Color::RGBA(255, 0, 0, 128));
+        canvas.fill_rect(Rect::new(screen_width as i32 / 2 - 32, screen_height as i32 / 2 - 32, 64, 64))?;
 
         // drawing to the screen
         canvas.present();

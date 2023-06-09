@@ -2,6 +2,7 @@ use sdl2::render::Canvas;
 use sdl2::video::Window;
 use sdl2::rect::Rect;
 use sdl2::keyboard::{Scancode, KeyboardState};
+use sdl2::pixels::Color;
 
 use crate::tile_map::{TileMap, TileHitBox};
 use crate::animation::Animation;
@@ -146,15 +147,27 @@ impl Player<'_>
 
     pub fn take_damage( &mut self, enemy: &Enemy ) -> bool
     {
-        if (self.location.x > enemy.get_location().x || self.location.x < enemy.get_location().x + self.tile_size as i32) ||
-           (self.location.x + (self.tile_size as i32) > enemy.get_location().x || self.location.x + (self.tile_size as i32) < enemy.get_location().x + self.tile_size as i32) ||
-           (self.location.y > enemy.get_location().y || self.location.y < enemy.get_location().y + self.tile_size as i32) ||
-           (self.location.y + (self.tile_size as i32) > enemy.get_location().y || self.location.y + (self.tile_size as i32) < enemy.get_location().y + self.tile_size as i32)
+        if (self.location.x < enemy.get_location().x || self.location.x > enemy.get_location().x + self.tile_size as i32) &&
+           (self.location.x + (self.tile_size as i32) < enemy.get_location().x || self.location.x + (self.tile_size as i32) > enemy.get_location().x + self.tile_size as i32)
         {
-            self.lives.take_damage(1);
-            return true;
+            return false;
         }
-        return false;
+        if (self.location.y < enemy.get_location().y || self.location.y > enemy.get_location().y + self.tile_size as i32) &&
+           (self.location.y + (self.tile_size as i32) < enemy.get_location().y || self.location.y + (self.tile_size as i32) > enemy.get_location().y + self.tile_size as i32)
+        {
+            return false;
+        }
+        self.lives.take_damage(1);
+        return true;
+    }
+
+    pub fn check_alive( &mut self ) -> bool
+    {
+        if self.lives.get_amount_of_lives() == 0
+        {
+            return false;
+        }
+        return true;
     }
 
     pub fn get_location(&self) -> Rect

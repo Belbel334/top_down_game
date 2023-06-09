@@ -15,14 +15,15 @@ pub struct Enemy<'a>
     location: Rect,
     moving_to: Rect,
     is_moving: bool,
+    allert_range: f32,
     animation: Animation<'a>,
 }
 
 impl Enemy<'_>
 {
-    pub fn new<'a>( location: Rect, animation: Animation<'a>, tile_size: u32, multiplier: u32 ) -> Enemy
+    pub fn new<'a>( location: Rect, animation: Animation<'a>, tile_size: u32, multiplier: u32, allert_range: f32 ) -> Enemy
     {
-        Enemy { tile_size: tile_size * multiplier, multiplier, location, moving_to: location, animation, is_moving: false }
+        Enemy { tile_size: tile_size * multiplier, multiplier, location, moving_to: location, animation, is_moving: false, allert_range }
     }
 
     pub fn draw( &mut self, camera: &Camera, canvas: &mut Canvas<Window> ) -> Result<(), String>
@@ -31,8 +32,15 @@ impl Enemy<'_>
         Ok(())
     }
 
-    pub fn go_to( &mut self, to: Point, tile_map: &TileMap, solid_tiles: &[u32]) 
+    pub fn go_to( &mut self, to: Point, tile_map: &TileMap, solid_tiles: &[u32] ) 
     {
+        let distance = (((to.x - self.location.x) * (to.x - self.location.x) + (to.y - self.location.y) * (to.y - self.location.y)) as f32).sqrt();
+
+        if distance > self.allert_range
+        {
+            return;
+        }
+
         if self.is_moving 
         {
             return;

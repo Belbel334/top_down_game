@@ -179,5 +179,3 @@ impl Player<'_>
         self.is_moving
     }
 }
-
-

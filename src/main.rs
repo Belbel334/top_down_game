@@ -127,7 +127,7 @@ fn main() -> Result<(), String> {
 
     let enemy_texture = texture_creator.load_texture(Path::new("res/enemy.png"))?;
     let mut enemies = vec![
-        enemy::Enemy::new(Rect::new(1024, 1024, tile_size, tile_size), animation::Animation::new(&enemy_texture, 0, 0, tile_size, 4, 15), tile_size, multiplier),
+        enemy::Enemy::new(Rect::new(1024, 1024, tile_size, tile_size), animation::Animation::new(&enemy_texture, 0, 0, tile_size, 4, 15), tile_size, multiplier, 250. ),
     ];
 
     let menu_texture = texture_creator.load_texture(Path::new("res/menu.png"))?;
@@ -149,7 +149,6 @@ fn main() -> Result<(), String> {
         loop_instant = Instant::now();
 
         for event in events.poll_iter() {
-
             match event {
                 // quiting window
                 Event::Quit { .. } => break 'mainloop,
@@ -215,9 +214,9 @@ fn main() -> Result<(), String> {
             }
         }
 
-        canvas.set_blend_mode(sdl2::render::BlendMode::Blend);
-        canvas.set_draw_color(Color::RGBA(255, 0, 0, 128));
-        canvas.fill_rect(Rect::new(screen_width as i32 / 2 - 32, screen_height as i32 / 2 - 32, 64, 64))?;
+        //canvas.set_blend_mode(sdl2::render::BlendMode::Blend);
+        //canvas.set_draw_color(Color::RGBA(255, 0, 0, 128));
+        //canvas.fill_rect(Rect::new(screen_width as i32 / 2 - 32, screen_height as i32 / 2 - 32, 64, 64))?;
 
         // drawing to the screen
         canvas.present();

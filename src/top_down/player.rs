@@ -144,15 +144,15 @@ impl Player<'_>
         }
     }
 
-    pub fn take_damage( &mut self, enemy: &Enemy ) -> bool
+    pub fn take_damage( &mut self, enemy: &Enemy, hitbox_ofset: i32 ) -> bool
     {
-        if (self.location.x < enemy.get_location().x || self.location.x > enemy.get_location().x + self.tile_size as i32) &&
-           (self.location.x + (self.tile_size as i32) < enemy.get_location().x || self.location.x + (self.tile_size as i32) > enemy.get_location().x + self.tile_size as i32)
+        if (self.location.x + hitbox_ofset < enemy.get_location().x || self.location.x  + hitbox_ofset > enemy.get_location().x + self.tile_size as i32) &&
+           (self.location.x + (self.tile_size as i32)  + hitbox_ofset < enemy.get_location().x || self.location.x  + hitbox_ofset + (self.tile_size as i32) > enemy.get_location().x + self.tile_size as i32)
         {
             return false;
         }
-        if (self.location.y < enemy.get_location().y || self.location.y > enemy.get_location().y + self.tile_size as i32) &&
-           (self.location.y + (self.tile_size as i32) < enemy.get_location().y || self.location.y + (self.tile_size as i32) > enemy.get_location().y + self.tile_size as i32)
+        if (self.location.y  + hitbox_ofset < enemy.get_location().y || self.location.y  + hitbox_ofset > enemy.get_location().y + self.tile_size as i32) &&
+           (self.location.y + (self.tile_size as i32)  + hitbox_ofset < enemy.get_location().y || self.location.y + (self.tile_size as i32)  + hitbox_ofset > enemy.get_location().y + self.tile_size as i32)
         {
             return false;
         }

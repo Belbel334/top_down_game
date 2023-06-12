@@ -194,7 +194,7 @@ fn main() -> Result<(), String> {
 
                 if frame >= hit_delay
                 {
-                    if player.take_damage(enemy)
+                    if player.take_damage(enemy, -5)
                     {
                         frame = 0;
                     }

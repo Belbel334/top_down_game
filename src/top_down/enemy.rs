@@ -96,5 +96,9 @@ impl Enemy<'_>
     {
         self.location
     }
+    
+    pub fn reset_anger ( &mut self ) {
+        self.is_attacking = false;
+    }
 }
 

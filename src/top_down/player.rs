@@ -178,4 +178,10 @@ impl Player<'_>
     {
         self.is_moving
     }
+
+    pub fn reset ( &mut self, location: Rect, ) {
+        self.location = location;
+        self.moving_to = location;
+        self.lives.set_lives(self.lives.get_max_amount_of_lives());
+    }
 }

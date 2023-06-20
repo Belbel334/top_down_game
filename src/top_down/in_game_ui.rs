@@ -23,6 +23,11 @@ impl Lives<'_>
     {
         self.amount_of_lives
     }
+
+    pub fn get_max_amount_of_lives( &self ) -> u32
+    {
+        self.max_lives
+    }
     
     pub fn draw( &mut self, canvas: &mut Canvas<Window>  ) -> Result<(), String>
     {
@@ -36,6 +41,11 @@ impl Lives<'_>
         }
         Ok(())
     }
+
+    pub fn set_lives ( &mut self, amount: u32 ) {
+        self.amount_of_lives = amount;
+    }
+
     pub fn take_damage( &mut self, amount: u32 )
     {
         if self.amount_of_lives == 0

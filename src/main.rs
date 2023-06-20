@@ -162,7 +162,11 @@ fn main() -> Result<(), String> {
         {
             if !player.check_alive()
             {
-                break 'mainloop;
+                player.reset(Rect::new(512, 512, 64, 64));
+                for enemy in &mut enemies {
+                    enemy.reset_anger();
+                }
+                playing = false;
             }
 
             keyboard_state = events.keyboard_state();

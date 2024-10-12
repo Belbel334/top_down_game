@@ -30,7 +30,7 @@ impl Animation<'_>
     {
         canvas.copy(&self.texture, self.frame_locations[(self.frame / self.frame_delay) as usize], location)?;
 
-        self.frame += 1;
+        self.frame += 2;
 
         if self.frame / self.frame_delay > self.length
         {

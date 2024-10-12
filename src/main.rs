@@ -35,12 +35,12 @@ fn main() -> Result<(), String> {
     let _image_context = sdl2::image::init(InitFlag::PNG | InitFlag::JPG)?;
     
     // defining tile size 
-    let tile_size: u32 = 32;
-    let multiplier: u32 = 2;
+    let tile_size: u32 = 34;
+    let multiplier: u32 = 4;
 
     // window size
-    let screen_width: u32 = 13 * tile_size * multiplier;
-    let screen_height: u32 = 9 * tile_size * multiplier;
+    let screen_width: u32 = 15 * tile_size * multiplier;
+    let screen_height: u32 = 8 * tile_size * multiplier;
 
     // setting up window
     let window = video_subsystem
